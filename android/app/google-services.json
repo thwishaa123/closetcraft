@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "719799195731",
+    "project_id": "closetcraft-34c9f",
+    "storage_bucket": "closetcraft-34c9f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719799195731:android:0b200954b8e681ac780ea6",
+        "android_client_info": {
+          "package_name": "com.example.closet_craft_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7TkE0JtnNJ8b3Z6EB3rnYQpS9shC2iRM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
