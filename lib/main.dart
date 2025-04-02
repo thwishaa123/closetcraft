@@ -7,12 +7,13 @@ import 'package:closet_craft_project/weather_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
-  //runApp(signApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,12 +22,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'App name',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-
-      home: const HomeScreen(), // first page when app opens
-    );
+        title: 'App name',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: HomeScreen() // first page when app opens
+        );
   }
 }

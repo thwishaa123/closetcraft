@@ -3,8 +3,7 @@ import 'package:closet_craft_project/closet.dart';
 import 'package:closet_craft_project/profile.dart';
 import 'package:closet_craft_project/weather_screen.dart';
 import 'package:flutter/material.dart';
-
-
+import 'add_closet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,21 +13,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List <Widget> widgetList = [
-
+  List<Widget> widgetList = [
     ClosetPage(),
     const WeatherScreen(),
     const CalendarScreen(),
-
     const ProfilePage(),
   ];
   int myIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddCloset()),
+        ),
+        backgroundColor: Colors.indigo,
+        mini: true,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: IndexedStack(
-        children: widgetList,
         index: myIndex,
+        children: widgetList,
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
@@ -38,12 +45,24 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         currentIndex: myIndex,
         items: [
-          BottomNavigationBarItem(icon: (Image.asset('images/closet.png',width: 27,)), label: 'Closet'),
-          const BottomNavigationBarItem(icon: Icon(Icons.sunny,color: Colors.black), label: 'Weather'),
+          BottomNavigationBarItem(
+              icon: (Image.asset(
+                'images/closet.png',
+                width: 27,
+              )),
+              label: 'Closet'),
           const BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month_outlined,color: Colors.black), label: 'Calendar'),
+              icon: Icon(Icons.sunny, color: Colors.black), label: 'Weather'),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month_outlined, color: Colors.black),
+              label: 'Calendar'),
 
-          const BottomNavigationBarItem(icon: Icon(Icons.person,color: Colors.black,), label: 'Profile,'),
+          const BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+                color: Colors.black,
+              ),
+              label: 'Profile,'),
 
           //BottomNavigationBarItem(
           // icon: Icon(Icons.),
