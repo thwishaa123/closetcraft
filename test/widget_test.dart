@@ -1,13 +1,13 @@
-import 'package:closet_craft_project/login.dart';
+import 'package:closet_craft_project/features/auth/pages/login.dart';
 import 'package:closet_craft_project/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp()); // This line is essential to build the widget tree.
+    await tester.pumpWidget(
+        const MyApp()); // This line is essential to build the widget tree.
 
     // Verify that the initial text is '0'.
     expect(find.text('0'), findsOneWidget);
@@ -22,4 +22,3 @@ void main() {
     expect(find.text('1'), findsOneWidget);
   });
 }
-

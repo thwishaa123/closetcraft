@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'add_closet.dart';
+import 'features/closet/pages/add_closet.dart';
 
 class PantsPage extends StatelessWidget {
   const PantsPage({super.key});
@@ -13,16 +13,16 @@ class PantsPage extends StatelessWidget {
       body: Column(
         children: [],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddCloset()));
-        },
-        label: Text(
-          'Add your Pants',
-          style: TextStyle(fontSize: 15),
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () async {
+      //     Navigator.push(
+      //         context, MaterialPageRoute(builder: (context) => AddCloset()));
+      //   },
+      //   label: Text(
+      //     'Add your Pants',
+      //     style: TextStyle(fontSize: 15),
+      //   ),
+      // ),
     );
   }
 }
