@@ -5,8 +5,8 @@ import 'package:image_picker/image_picker.dart';
 
 class CloudinaryRepo {
   Future<String?> uploadToCloudinary(XFile imageFile) async {
-    const cloudName = 'dffmjd5tv';
-    const uploadPreset = 'closet_craft_upload';
+    const cloudName = 'dtcvutusn';
+    const uploadPreset = 'closetcraft';
     const uploadUrl = 'https://api.cloudinary.com/v1_1/$cloudName/image/upload';
 
     final request = http.MultipartRequest('POST', Uri.parse(uploadUrl))
