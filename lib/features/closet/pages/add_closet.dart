@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:closet_craft_project/data/repo/cloudinary_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -202,6 +201,45 @@ class _AddClosetState extends State<AddCloset> {
                               ),
                             );
                             return;
+                          }
+
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          final imageUrl = await CloudinaryRepo()
+                              .uploadToCloudinary(selectedImage!);
+                          log(imageUrl ?? "No data");
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection('closet')
+                                .add({
+                              'image': imageUrl,
+                              'color': color,
+                              'weather': weather,
+                              'fabric': fabric,
+                              'uid': FirebaseAuth.instance.currentUser!.uid,
+                              'dateAdded': DateTime.now(),
+                            });
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Item added to your closet!"),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            Navigator.pop(context);
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Error: ${e.toString()}"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          } finally {
+                            setState(() {
+                              isLoading = false;
+                            });
                           }
                         },
                   style: ElevatedButton.styleFrom(
