@@ -11,7 +11,7 @@ class ClosetProvider with ChangeNotifier {
   String? _error;
   String? get error => _error;
 
-  addClothInCloset(
+  Future<bool?> addClothInCloset(
       XFile image, String color, String weather, String fabric) async {
     _loading = true;
     notifyListeners();
@@ -26,7 +26,7 @@ class ClosetProvider with ChangeNotifier {
         'uid': FirebaseAuth.instance.currentUser!.uid,
         'dateAdded': DateTime.now(),
       });
-
+      return true;
       // ScaffoldMessenger.of(context).showSnackBar(
       //   const SnackBar(
       //     content: Text("Item added to your closet!"),
@@ -41,6 +41,8 @@ class ClosetProvider with ChangeNotifier {
       //     backgroundColor: Colors.red,
       //   ),
       // );
+      _error = e.toString();
+      return false;
     } finally {
       _loading = false;
       notifyListeners();
