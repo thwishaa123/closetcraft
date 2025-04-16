@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../shirt.dart';
+import '../../../wardrobe.dart';
 import '../../../tshirt.dart';
 import '../../../shoes.dart';
 import '../../../pants.dart';
@@ -50,13 +50,37 @@ class ClosetPage extends StatelessWidget {
                 crossAxisSpacing: 12,
                 children: [
                   _buildCategoryCard(
-                      context, 'Shirts', 'images/shirt.png', 5, ShirtPage()),
-                  _buildCategoryCard(context, 'T-Shirts', 'images/tshirt.png',
-                      8, TShirtPage()),
+                      context,
+                      'Shirts',
+                      'images/shirt.png',
+                      5,
+                      WardrobePage(
+                        clothType: 'Shirt',
+                      )),
                   _buildCategoryCard(
-                      context, 'Pants', 'images/pants.png', 4, PantsPage()),
+                      context,
+                      'T-Shirts',
+                      'images/tshirt.png',
+                      8,
+                      WardrobePage(
+                        clothType: 'Tshirt',
+                      )),
                   _buildCategoryCard(
-                      context, 'Shoes', 'images/shoes.jpg', 3, ShoePage()),
+                      context,
+                      'Pants',
+                      'images/pants.png',
+                      4,
+                      WardrobePage(
+                        clothType: 'Pant',
+                      )),
+                  _buildCategoryCard(
+                      context,
+                      'Shoes',
+                      'images/shoes.jpg',
+                      3,
+                      WardrobePage(
+                        clothType: 'Shoe',
+                      )),
                 ],
               ),
 

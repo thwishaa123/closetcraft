@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  geolocator: ^10.0.0
+  http: ^1.1.0
+    
 
 
 
@@ -43,7 +46,7 @@ dependencies:
   cloud_firestore: 
   image_picker: 
   flutter_typeahead:
-  http: 
+  
    
 
 dev_dependencies:
