@@ -1,7 +1,7 @@
-import 'package:closet_craft_project/features/weather/provider/weather_provider.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -11,107 +11,84 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  int index = 0;
+  int temperature = 0;
+  String weatherCondition = 'Loading...';
+  int humidity = 0;
+  int windSpeed = 0;
+  String locationName = 'Fetching...';
 
-  // Location data with associated weather information
-  final Map<String, Map<String, dynamic>> locationData = {
-    'New York': {
-      'temperature': 25,
-      'condition': 'Sunny',
-      'humidity': 65,
-      'windSpeed': 10,
-    },
-    'London': {
-      'temperature': 18,
-      'condition': 'Cloudy',
-      'humidity': 78,
-      'windSpeed': 15,
-    },
-    'Tokyo': {
-      'temperature': 32,
-      'condition': 'Sunny',
-      'humidity': 45,
-      'windSpeed': 8,
-    },
-    'Seattle': {
-      'temperature': 12,
-      'condition': 'Rainy',
-      'humidity': 90,
-      'windSpeed': 20,
-    },
-    'Dubai': {
-      'temperature': 38,
-      'condition': 'Sunny',
-      'humidity': 35,
-      'windSpeed': 12,
-    },
-    'Sydney': {
-      'temperature': 27,
-      'condition': 'Cloudy',
-      'humidity': 60,
-      'windSpeed': 18,
-    },
-    'Moscow': {
-      'temperature': 5,
-      'condition': 'Snowy',
-      'humidity': 72,
-      'windSpeed': 25,
-    },
-    'Mumbai': {
-      'temperature': 33,
-      'condition': 'Rainy',
-      'humidity': 85,
-      'windSpeed': 8,
-    },
-  };
-
-  // Current weather variables
-  String selectedLocation = 'New York'; // Default location
-  int temperature = 25;
-  String weatherCondition = 'Sunny';
-  int humidity = 65;
-  int windSpeed = 10;
-
-  // Weather condition icons mapping
   final Map<String, IconData> weatherIcons = {
-    'Sunny': Icons.wb_sunny,
-    'Cloudy': Icons.cloud,
-    'Rainy': Icons.water_drop,
-    'Snowy': Icons.ac_unit,
-    'Stormy': Icons.thunderstorm,
-    'Foggy': Icons.cloud_queue,
+    'Clear': Icons.wb_sunny,
+    'Clouds': Icons.cloud,
+    'Rain': Icons.water_drop,
+    'Snow': Icons.ac_unit,
+    'Thunderstorm': Icons.thunderstorm,
+    'Drizzle': Icons.grain,
+    'Mist': Icons.blur_on,
+    'Fog': Icons.cloud_queue,
   };
 
-  // late final WeatherProvider weatherProvider;
-  // Initialize state
   @override
   void initState() {
     super.initState();
-    // weatherProvider = WeatherProvider();
-    Future.microtask(
-      () => context.read<WeatherProvider>().getCurrentWeather('Delhi'),
-    );
-    updateWeatherForLocation(selectedLocation);
+    fetchWeather();
   }
 
-  // Method to update weather data based on selected location
-  void updateWeatherForLocation(String location) {
-    if (locationData.containsKey(location)) {
+  Future<void> fetchWeather() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() => weatherCondition = 'Location Disabled');
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever ||
+        permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        setState(() => weatherCondition = 'Permission Denied');
+        return;
+      }
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    final lat = position.latitude;
+    final lon = position.longitude;
+
+    const apiKey = '7f61f1c1041e2e6fa47202ecf02ee646';
+    final url =
+        'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&units=metric&appid=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
       setState(() {
-        selectedLocation = location;
-        temperature = locationData[location]!['temperature'];
-        weatherCondition = locationData[location]!['condition'];
-        humidity = locationData[location]!['humidity'];
-        windSpeed = locationData[location]!['windSpeed'];
+        temperature = data['main']['temp'].round();
+        weatherCondition = data['weather'][0]['main'];
+        humidity = data['main']['humidity'];
+        windSpeed = data['wind']['speed'].round();
+        locationName = data['name'];
       });
+    } else {
+      setState(() => weatherCondition = 'Error fetching data');
     }
   }
 
-  Future<LottieComposition?> customDecoder(List<int> bytes) {
-    return LottieComposition.decodeZip(bytes, filePicker: (files) {
-      return files.firstWhere(
-          (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'));
-    });
+  String _getOutfitSuggestion() {
+    if (weatherCondition == 'Rain') {
+      return "It's raining in $locationName! Wear a waterproof jacket and carry an umbrella.";
+    } else if (weatherCondition == 'Snow') {
+      return "Snowy in $locationName! Wear a heavy coat, boots, and scarf.";
+    } else if (temperature >= 30) {
+      return "Hot day in $locationName! Light cotton clothes are best.";
+    } else if (temperature >= 20) {
+      return "Nice weather in $locationName. T-shirt and jeans would be fine.";
+    } else if (temperature >= 10) {
+      return "Cool in $locationName. Wear a jacket or sweater.";
+    } else {
+      return "Cold in $locationName! Bundle up with warm clothes.";
+    }
   }
 
   @override
@@ -119,319 +96,133 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text(
-          "Weather Outfit",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text("Weather Outfit"),
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
-        elevation: 0,
         actions: [
-          // Add refresh button
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () {
-              updateWeatherForLocation(selectedLocation);
-            },
+            onPressed: fetchWeather,
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          setState(() {
-            index = (index + 1);
-            final currentData = locationData[selectedLocation]!;
-            temperature = currentData['temperature'] +
-                (index % 3 - 1); // -1, 0, or +1 degree change
-          });
-        },
-        label: const Text(
-          'Build an Outfit',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1,
-          ),
-        ),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      body: Consumer<WeatherProvider>(
-        builder: (context, provider, child) {
-          print(provider.data == null);
-          if (provider.data != null) {
-            var data = provider.data!;
-            return Padding(
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Weather overview card
+            Container(
+              width: double.infinity,
               padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Left Section: Weather icon and temperature
-                        Row(
-                          children: [
-                            Icon(
-                              weatherIcons[weatherCondition] ??
-                                  Icons.question_mark,
-                              color: Colors.indigo,
-                              size: 24,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              '${data['current']['temp_c']}°C',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[800],
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Center Section: Today text
-                        Text(
-                          '< Today >',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.indigo,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        // Right Section: Location dropdown
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              color: Colors.indigo,
-                              size: 24,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              data['location']['name'],
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[800],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            // DropdownButtonHideUnderline(
-                            //   child: DropdownButton<String>(
-                            //     value: selectedLocation,
-                            //     icon: const Icon(Icons.arrow_drop_down,
-                            //         color: Colors.indigo, size: 20),
-                            //     style: TextStyle(
-                            //       fontSize: 16,
-                            //       color: Colors.grey[800],
-                            //       fontWeight: FontWeight.w500,
-                            //     ),
-                            //     onChanged: (String? newValue) {
-                            //       if (newValue != null) {
-                            //         updateWeatherForLocation(newValue);
-                            //       }
-                            //     },
-                            //     items: locationData.keys
-                            //         .map<DropdownMenuItem<String>>(
-                            //             (String value) {
-                            //       return DropdownMenuItem<String>(
-                            //         value: value,
-                            //         child: Text(value),
-                            //       );
-                            //     }).toList(),
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Weather details container
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Weather Details",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.indigo,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Dynamic weather information
-                        WeatherInfoRow(
-                            icon: Icons.thermostat,
-                            label: "Temperature",
-                            value: "${data['current']['temp_c']}"),
-                        const SizedBox(height: 12),
-                        WeatherInfoRow(
-                            icon: weatherIcons[weatherCondition] ??
-                                Icons.question_mark,
-                            label: "Condition",
-                            value: weatherCondition),
-                        const SizedBox(height: 12),
-                        WeatherInfoRow(
-                            icon: Icons.water_drop,
-                            label: "Humidity",
-                            value: "${data['current']['humidity']}%"),
-                        const SizedBox(height: 12),
-                        WeatherInfoRow(
-                            icon: Icons.air, label: "Wind", value: " km/h"),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Outfit suggestion based on weather
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Outfit Suggestion",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.indigo,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Dynamic outfit suggestion based on weather condition and temperature
-                        Text(
-                          _getOutfitSuggestion(),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                      ],
-                    ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
-            );
-          } else {
-            return Lottie.asset(
-              'assets/animation/weather.lottie',
-              decoder: customDecoder,
-            );
-          }
-        },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    weatherIcons[weatherCondition] ?? Icons.question_mark,
+                    size: 32,
+                    color: Colors.indigo,
+                  ),
+                  Text(
+                    "$temperature°C",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, color: Colors.indigo),
+                      Text(locationName),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Weather details
+            WeatherInfoRow(
+                icon: Icons.thermostat,
+                label: "Temperature",
+                value: "$temperature°C"),
+            WeatherInfoRow(
+                icon: weatherIcons[weatherCondition] ?? Icons.question_mark,
+                label: "Condition",
+                value: weatherCondition),
+            WeatherInfoRow(
+                icon: Icons.water_drop, label: "Humidity", value: "$humidity%"),
+            WeatherInfoRow(
+                icon: Icons.air, label: "Wind", value: "$windSpeed km/h"),
+
+            const SizedBox(height: 20),
+
+            // Outfit suggestion
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Text(
+                _getOutfitSuggestion(),
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-
-  // Method to generate outfit suggestions based on current weather
-  String _getOutfitSuggestion() {
-    if (weatherCondition == 'Rainy') {
-      return "It's raining in $selectedLocation! Consider wearing a waterproof jacket, umbrella, and waterproof shoes.";
-    } else if (weatherCondition == 'Snowy') {
-      return "It's snowing in $selectedLocation! Bundle up with a warm coat, scarf, gloves, and boots.";
-    } else if (temperature >= 30) {
-      return "It's very hot in $selectedLocation today! Light, breathable fabrics like cotton or linen would be ideal. Don't forget sunscreen!";
-    } else if (temperature >= 20) {
-      return "Pleasant weather in $selectedLocation today. A light shirt or t-shirt with pants or a skirt would be comfortable.";
-    } else if (temperature >= 10) {
-      return "It's a bit cool in $selectedLocation today. Consider layering with a light jacket or sweater.";
-    } else {
-      return "It's cold in $selectedLocation today! Bundle up with a warm coat and layers.";
-    }
-  }
 }
 
-// Helper widget for weather information rows
 class WeatherInfoRow extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
 
-  const WeatherInfoRow(
-      {super.key,
-      required this.icon,
-      required this.label,
-      required this.value});
+  const WeatherInfoRow({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: Colors.indigo,
-          size: 22,
-        ),
-        const SizedBox(width: 12),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.indigo, size: 20),
+          const SizedBox(width: 12),
+          Text(label),
+          const Spacer(),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-        ),
-        const Spacer(),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
