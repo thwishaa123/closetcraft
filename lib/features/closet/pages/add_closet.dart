@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:closet_craft_project/data/repo/cloudinary_repo.dart';
+import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
+import 'package:closet_craft_project/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -21,6 +23,13 @@ class _AddClosetState extends State<AddCloset> {
   String? weather;
   String? fabric;
   bool isLoading = false;
+
+  late final ClosetProvider closetProvider;
+  @override
+  void initState() {
+    closetProvider = ClosetProvider();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,86 +191,69 @@ class _AddClosetState extends State<AddCloset> {
               const SizedBox(height: 30),
 
               // Add Button
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: isLoading
-                      ? null
-                      : () async {
-                          if (selectedImage == null ||
-                              color == null ||
-                              weather == null ||
-                              fabric == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                    "Please complete all fields to continue"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            return;
-                          }
+              ListenableBuilder(
+                  listenable: closetProvider,
+                  builder: (context, _) {
+                    return SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        onPressed: closetProvider.loading
+                            ? null
+                            : () async {
+                                if (selectedImage == null ||
+                                    color == null ||
+                                    weather == null ||
+                                    fabric == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          "Please complete all fields to continue"),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
 
-                          setState(() {
-                            isLoading = true;
-                          });
-
-                          final imageUrl = await CloudinaryRepo()
-                              .uploadToCloudinary(selectedImage!);
-                          log(imageUrl ?? "No data");
-                          try {
-                            // await FirebaseFirestore.instance
-                            //     .collection('closet')
-                            //     .add({
-                            //   'image': imageUrl,
-                            //   'color': color,
-                            //   'weather': weather,
-                            //   'fabric': fabric,
-                            //   'uid': FirebaseAuth.instance.currentUser!.uid,
-                            //   'dateAdded': DateTime.now(),
-                            // });
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Item added to your closet!"),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                            Navigator.pop(context);
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Error: ${e.toString()}"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          } finally {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.indigo,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 2,
-                  ),
-                  child: isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          'ADD TO CLOSET',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
+                                final res =
+                                    await closetProvider.addClothInCloset(
+                                        selectedImage!,
+                                        color!,
+                                        weather!,
+                                        fabric!);
+                                if (context.mounted) {
+                                  if (res) {
+                                    showSnackBar(
+                                        context, "Item added to your closet!");
+                                  } else {
+                                    showSnackBar(
+                                        context, 'Smoething went Wrong!!');
+                                  }
+                                  Navigator.pop(context);
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.indigo,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
+                          elevation: 2,
                         ),
-                ),
-              ),
+                        child: closetProvider.loading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white)
+                            : const Text(
+                                'ADD TO CLOSET',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                      ),
+                    );
+                  }),
             ],
           ),
         ),
