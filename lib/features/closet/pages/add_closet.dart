@@ -204,7 +204,8 @@ class _AddClosetState extends State<AddCloset> {
                                 if (selectedImage == null ||
                                     color == null ||
                                     weather == null ||
-                                    fabric == null) {
+                                    fabric == null ||
+                                    cloth == null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -220,7 +221,8 @@ class _AddClosetState extends State<AddCloset> {
                                         selectedImage!,
                                         color!,
                                         weather!,
-                                        fabric!);
+                                        fabric!,
+                                        cloth!);
                                 if (context.mounted) {
                                   if (res) {
                                     showSnackBar(

@@ -11,7 +11,7 @@ plugins {
 android {
     namespace = "com.example.closet_craft_project"
     compileSdk = 35
-    ndkVersion = "25.1.8937393"
+    ndkVersion = "26.1.10909125"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

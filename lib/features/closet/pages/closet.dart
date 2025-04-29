@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../wardrobe.dart';
-import '../../../tshirt.dart';
-import '../../../shoes.dart';
-import '../../../pants.dart';
 import 'add_closet.dart';
 
 class ClosetPage extends StatelessWidget {
@@ -50,37 +47,41 @@ class ClosetPage extends StatelessWidget {
                 crossAxisSpacing: 12,
                 children: [
                   _buildCategoryCard(
-                      context,
-                      'Shirts',
-                      'images/shirt.png',
-                      5,
-                      WardrobePage(
-                        clothType: 'Shirt',
-                      )),
+                    context,
+                    'Shirts',
+                    'images/shirt.png',
+                    5,
+                    const WardrobePage(
+                      clothType: 'Shirt',
+                    ),
+                  ),
                   _buildCategoryCard(
-                      context,
-                      'T-Shirts',
-                      'images/tshirt.png',
-                      8,
-                      WardrobePage(
-                        clothType: 'Tshirt',
-                      )),
+                    context,
+                    'T-Shirts',
+                    'images/tshirt.png',
+                    8,
+                    const WardrobePage(
+                      clothType: 'Tshirt',
+                    ),
+                  ),
                   _buildCategoryCard(
-                      context,
-                      'Pants',
-                      'images/pants.png',
-                      4,
-                      WardrobePage(
-                        clothType: 'Pant',
-                      )),
+                    context,
+                    'Pants',
+                    'images/pants.png',
+                    4,
+                    const WardrobePage(
+                      clothType: 'Pant',
+                    ),
+                  ),
                   _buildCategoryCard(
-                      context,
-                      'Shoes',
-                      'images/shoes.jpg',
-                      3,
-                      WardrobePage(
-                        clothType: 'Shoe',
-                      )),
+                    context,
+                    'Shoes',
+                    'images/shoes.jpg',
+                    3,
+                    const WardrobePage(
+                      clothType: 'Shoe',
+                    ),
+                  ),
                 ],
               ),
 

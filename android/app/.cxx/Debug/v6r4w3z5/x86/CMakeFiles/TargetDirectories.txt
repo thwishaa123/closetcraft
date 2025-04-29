@@ -1,0 +1,2 @@
+C:/Users/anpap/Desktop/athena/closetcraft/android/app/.cxx/Debug/v6r4w3z5/x86/CMakeFiles/edit_cache.dir
+C:/Users/anpap/Desktop/athena/closetcraft/android/app/.cxx/Debug/v6r4w3z5/x86/CMakeFiles/rebuild_cache.dir

@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
+import 'package:closet_craft_project/features/recommendation/recommendation_page.dart';
+import 'package:closet_craft_project/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -16,6 +20,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   int humidity = 0;
   int windSpeed = 0;
   String locationName = 'Fetching...';
+  String? weatherData;
 
   final Map<String, IconData> weatherIcons = {
     'Clear': Icons.wb_sunny,
@@ -37,8 +42,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Future<void> fetchWeather() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      setState(() => weatherCondition = 'Location Disabled');
-      return;
+      await Geolocator.requestPermission();
+      // setState(() => weatherCondition = 'Location Disabled');
+      // return;
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
@@ -69,6 +75,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
         humidity = data['main']['humidity'];
         windSpeed = data['wind']['speed'].round();
         locationName = data['name'];
+
+        weatherData =
+            "Weather of my loaction $temperature $weatherCondition $humidity $windSpeed";
       });
     } else {
       setState(() => weatherCondition = 'Error fetching data');
@@ -117,11 +126,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 8,
-                    offset: const Offset(0, 4),
+                    offset: Offset(0, 4),
                   ),
                 ],
               ),
@@ -129,10 +138,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Icon(
-                    weatherIcons[weatherCondition] ?? Icons.question_mark,
+                    weatherIcons[weatherCondition] ?? Icons.cloud,
                     size: 32,
                     color: Colors.indigo,
                   ),
+                  // Text(
+                  //   weatherCondition,
+                  //   style: const TextStyle(
+                  //     fontSize: 20,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
                   Text(
                     "$temperature°C",
                     style: const TextStyle(
@@ -175,7 +191,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 8,
@@ -188,6 +204,35 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 style: const TextStyle(fontSize: 16),
               ),
             ),
+
+            const SizedBox(height: 20),
+
+            // suggestion button
+            ElevatedButton(
+              onPressed: () async {
+                final res = await context
+                    .read<ClosetProvider>()
+                    .getAllClothFromCloset();
+
+                if (weatherData == null) {
+                  showSnackBar(context,
+                      "Unavailable Weather Data, try to connect to internet and refresh");
+                  return;
+                }
+                if (res != null && weatherData != null && context.mounted) {
+                  moveTo(
+                    context,
+                    OutfitRecommendationScreen(
+                      closetData: res,
+                      weatherData: weatherData!,
+                    ),
+                  );
+                } else {
+                  showSnackBar(context, "No Closet Data");
+                }
+              },
+              child: const Text('Build Outfit'),
+            )
           ],
         ),
       ),
