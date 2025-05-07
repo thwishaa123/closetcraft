@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class RecommendationProvider with ChangeNotifier {
-  static const geminiKey = "";
-  final List<Map<String, dynamic>> chat = [];
+  static const geminiKey = "AIzaSyD54Ex6trGgnYAfHLVwQbTqeMm5XnyH-Fc";
+  // final List<Map<String, dynamic>> chat = [];
   bool _loading = false;
   bool get loading => _loading;
 
   String _errorMessage = '';
+
+  GeminiResponse? _outfitResponse;
+  GeminiResponse? get outfitResponse => _outfitResponse;
 
   // void _handleSubmitted(String text) {
   //   if (text.trim().isEmpty) return;
@@ -150,6 +153,8 @@ class RecommendationProvider with ChangeNotifier {
         final formatted = geminiResponseFromJson(
           val.substring(7, val.length - 3),
         );
+
+        _outfitResponse = formatted;
 
         // chat.add({
         //   "role": "model",
