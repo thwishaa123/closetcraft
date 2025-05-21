@@ -1,4 +1,4 @@
-import 'package:closet_craft_project/calendar_screen.dart';
+import 'package:closet_craft_project/features/calendar/calendar_screen.dart';
 import 'package:closet_craft_project/features/closet/pages/closet.dart';
 import 'package:closet_craft_project/features/profile/pages/profile.dart';
 import 'package:closet_craft_project/features/weather/weather_screen.dart';
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        key: GlobalKey(),
+        heroTag: 'HomeFAB',
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const AddCloset()),

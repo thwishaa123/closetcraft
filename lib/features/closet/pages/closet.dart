@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../wardrobe.dart';
+import 'wardrobe.dart';
 import 'add_closet.dart';
 
 class ClosetPage extends StatelessWidget {

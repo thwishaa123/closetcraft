@@ -1,4 +1,5 @@
 import 'package:closet_craft_project/features/bottom_navigation/bottom_navigation.dart';
+import 'package:closet_craft_project/features/calendar/provider/outfit_event_provider.dart';
 import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
 import 'package:closet_craft_project/features/recommendation/provider/recommendation_provider.dart';
 import 'package:closet_craft_project/features/weather/provider/weather_provider.dart';
@@ -20,6 +21,9 @@ void main() async {
       ),
       ChangeNotifierProvider<ClosetProvider>(
         create: (_) => ClosetProvider(),
+      ),
+      ChangeNotifierProvider<OutfitEventProvider>(
+        create: (_) => OutfitEventProvider()..getOutfitEvent(),
       ),
     ], child: const MyApp()),
   );

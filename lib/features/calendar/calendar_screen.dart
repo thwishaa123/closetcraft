@@ -1,4 +1,10 @@
+import 'dart:developer';
+
+import 'package:closet_craft_project/features/calendar/pages/outfit_event_form.dart';
+import 'package:closet_craft_project/features/calendar/provider/outfit_event_provider.dart';
+import 'package:closet_craft_project/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -9,11 +15,21 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  DateTime today = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
   void _onDaySelected(DateTime day, DateTime focusedDay) {
+    final res = context.read<OutfitEventProvider>().filterEvents(day);
+    log(context.read<OutfitEventProvider>().filteredEvents.length.toString());
     setState(() {
-      today = day;
+      _focusedDay = day;
     });
+  }
+
+  @override
+  void initState() {
+    Future.microtask(() {
+      context.read<OutfitEventProvider>().getOutfitEvent();
+    });
+    super.initState();
   }
 
   @override
@@ -65,11 +81,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
               padding: const EdgeInsets.all(12),
               child: TableCalendar(
-                rowHeight: 43,
+                calendarFormat: CalendarFormat.week,
                 availableGestures: AvailableGestures.all,
-                selectedDayPredicate: (day) => isSameDay(day, today),
+                selectedDayPredicate: (day) => isSameDay(day, _focusedDay),
                 onDaySelected: _onDaySelected,
-                focusedDay: today,
+                // onDisabledDayTapped: (day) {
+                //   print(day.toString());
+                // },
+                focusedDay: _focusedDay,
                 firstDay: DateTime.utc(2025, 1, 18),
                 lastDay: DateTime.utc(2030, 12, 31),
                 headerStyle: const HeaderStyle(
@@ -105,38 +124,53 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: ListView(
-                children: [
-                  _buildEventCard(
-                    'Casual Friday',
-                    'March 31, 2025',
-                    'Wear your best casual outfit',
-                    Colors.indigo,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildEventCard(
-                    'Weekend Shopping',
-                    'April 2, 2025',
-                    'Buy new clothes for spring',
-                    Colors.green,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildEventCard(
-                    'Business Meeting',
-                    'April 5, 2025',
-                    'Dress formal for client meeting',
-                    Colors.orange,
-                  ),
-                ],
-              ),
-            ),
+            Consumer<OutfitEventProvider>(builder: (context, provider, _) {
+              // log(provider.allEvents.length.toString());
+              return Expanded(
+                child: ListView.separated(
+                  itemCount: provider.allEvents.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
+                  itemBuilder: (context, index) {
+                    return _buildEventCard(
+                      'Casual Friday',
+                      'March 31, 2025',
+                      'Wear your best casual outfit',
+                      Colors.indigo,
+                    );
+                  },
+                  // children: [
+                  //   _buildEventCard(
+                  //     'Casual Friday',
+                  //     'March 31, 2025',
+                  //     'Wear your best casual outfit',
+                  //     Colors.indigo,
+                  //   ),
+                  //   const SizedBox(height: 12),
+                  //   _buildEventCard(
+                  //     'Weekend Shopping',
+                  //     'April 2, 2025',
+                  //     'Buy new clothes for spring',
+                  //     Colors.green,
+                  //   ),
+                  //   const SizedBox(height: 12),
+                  //   _buildEventCard(
+                  //     'Business Meeting',
+                  //     'April 5, 2025',
+                  //     'Dress formal for client meeting',
+                  //     Colors.orange,
+                  //   ),
+                  // ],
+                ),
+              );
+            }),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'Outfit Create',
         onPressed: () {
-          // Add new event
+          moveTo(context, OutfitEventForm());
         },
         backgroundColor: Colors.indigo,
         child: const Icon(Icons.add, color: Colors.white),

@@ -1,4 +1,6 @@
+import 'package:closet_craft_project/features/calendar/pages/outfit_event_form.dart';
 import 'package:closet_craft_project/features/closet/pages/add_closet.dart';
+import 'package:closet_craft_project/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -48,24 +50,24 @@ class WardrobePage extends StatelessWidget {
       body: Column(
         children: [
           // Category filters
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: SizedBox(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  _buildFilterChip('All', true),
-                  _buildFilterChip('Casual', false),
-                  _buildFilterChip('Formal', false),
-                  _buildFilterChip('Sports', false),
-                  _buildFilterChip('Seasonal', false),
-                  _buildFilterChip('Favorites', false),
-                ],
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+          //   child: SizedBox(
+          //     height: 40,
+          //     child: ListView(
+          //       scrollDirection: Axis.horizontal,
+          //       padding: const EdgeInsets.symmetric(horizontal: 16),
+          //       children: [
+          //         _buildFilterChip('All', true),
+          //         _buildFilterChip('Casual', false),
+          //         _buildFilterChip('Formal', false),
+          //         _buildFilterChip('Sports', false),
+          //         _buildFilterChip('Seasonal', false),
+          //         _buildFilterChip('Favorites', false),
+          //       ],
+          //     ),
+          //   ),
+          // ),
 
           // Main content
           Expanded(
@@ -134,6 +136,7 @@ class WardrobePage extends StatelessWidget {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       final doc = snapshot.data!.docs[index];
+
                       return _buildClothingItem(context, doc);
                     },
                   ),
@@ -144,6 +147,7 @@ class WardrobePage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'Wardrobe',
         onPressed: () async {
           Navigator.push(
             context,
@@ -186,11 +190,11 @@ class WardrobePage extends StatelessWidget {
   }
 
   // Clothing item card
-  Widget _buildClothingItem(BuildContext context, DocumentSnapshot doc) {
+  Widget _buildClothingItem(BuildContext context, QueryDocumentSnapshot doc) {
     // Extract data from document
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    String imageUrl = data['imageUrl'] ?? '';
+    String imageUrl = data['image'] ?? '';
     String fabric = data['fabric'] ?? 'Unknown Fabric';
     String color = data['color'] ?? 'N/A';
     String season = data['season'] ?? 'All Season';
@@ -230,7 +234,7 @@ class WardrobePage extends StatelessWidget {
                             top: Radius.circular(12)),
                         child: Image.network(
                           imageUrl,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                           errorBuilder: (context, error, stackTrace) {
                             return const Center(
                               child: Icon(
@@ -309,6 +313,14 @@ class WardrobePage extends StatelessWidget {
                           fontSize: 14,
                         ),
                       ),
+                      const Spacer(),
+                      IconButton.filled(
+                        onPressed: () {
+                          data['id'] = doc.id;
+                          moveTo(context, OutfitEventForm(outfit: data));
+                        },
+                        icon: const Icon(Icons.add),
+                      )
                     ],
                   ),
                 ],
@@ -599,7 +611,7 @@ class WardrobePage extends StatelessWidget {
                     child: imageUrl.isNotEmpty
                         ? Image.network(
                             imageUrl,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
                               return const Center(
                                 child: Icon(
@@ -625,7 +637,6 @@ class WardrobePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        
                         const SizedBox(height: 8),
                         Text(
                           fabric,
