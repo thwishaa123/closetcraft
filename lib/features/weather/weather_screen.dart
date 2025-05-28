@@ -53,7 +53,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        setState(() => weatherCondition = 'Permission Denied');
+        if (mounted) setState(() => weatherCondition = 'Permission Denied');
         return;
       }
     }
@@ -69,18 +69,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      setState(() {
-        temperature = data['main']['temp'].round();
-        weatherCondition = data['weather'][0]['main'];
-        humidity = data['main']['humidity'];
-        windSpeed = data['wind']['speed'].round();
-        locationName = data['name'];
-
-        weatherData =
-            "Weather of my loaction $temperature $weatherCondition $humidity $windSpeed";
-      });
+      if (mounted) {
+        setState(() {
+          temperature = data['main']['temp'].round();
+          weatherCondition = data['weather'][0]['main'];
+          humidity = data['main']['humidity'];
+          windSpeed = data['wind']['speed'].round();
+          locationName = data['name'];
+          weatherData =
+              "Weather of my loaction $temperature $weatherCondition $humidity $windSpeed";
+        });
+      }
     } else {
-      setState(() => weatherCondition = 'Error fetching data');
+      if (mounted) setState(() => weatherCondition = 'Error fetching data');
     }
   }
 
@@ -106,8 +107,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text("Weather Outfit"),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

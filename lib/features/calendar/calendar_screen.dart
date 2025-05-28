@@ -1,9 +1,11 @@
 import 'dart:developer';
 
+import 'package:closet_craft_project/features/calendar/pages/outfit_event_detail.dart';
 import 'package:closet_craft_project/features/calendar/pages/outfit_event_form.dart';
 import 'package:closet_craft_project/features/calendar/provider/outfit_event_provider.dart';
 import 'package:closet_craft_project/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -26,9 +28,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   void initState() {
-    Future.microtask(() {
-      context.read<OutfitEventProvider>().getOutfitEvent();
-    });
+    // Future.microtask(() {
+    //   context.read<OutfitEventProvider>().getOutfitEvent();
+    // });
     super.initState();
   }
 
@@ -41,17 +43,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           'Your Calendar',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              // Add event functionality would go here
-            },
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -127,41 +119,53 @@ class _CalendarScreenState extends State<CalendarScreen> {
             Consumer<OutfitEventProvider>(builder: (context, provider, _) {
               // log(provider.allEvents.length.toString());
               return Expanded(
-                child: ListView.separated(
-                  itemCount: provider.allEvents.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    return _buildEventCard(
-                      'Casual Friday',
-                      'March 31, 2025',
-                      'Wear your best casual outfit',
-                      Colors.indigo,
-                    );
-                  },
-                  // children: [
-                  //   _buildEventCard(
-                  //     'Casual Friday',
-                  //     'March 31, 2025',
-                  //     'Wear your best casual outfit',
-                  //     Colors.indigo,
-                  //   ),
-                  //   const SizedBox(height: 12),
-                  //   _buildEventCard(
-                  //     'Weekend Shopping',
-                  //     'April 2, 2025',
-                  //     'Buy new clothes for spring',
-                  //     Colors.green,
-                  //   ),
-                  //   const SizedBox(height: 12),
-                  //   _buildEventCard(
-                  //     'Business Meeting',
-                  //     'April 5, 2025',
-                  //     'Dress formal for client meeting',
-                  //     Colors.orange,
-                  //   ),
-                  // ],
-                ),
+                child: provider.filteredEvents.isEmpty
+                    ? const Center(child: Text('No Events Added'))
+                    : ListView.separated(
+                        itemCount: provider.filteredEvents.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              moveTo(
+                                  context,
+                                  EventDetailPage(
+                                      event: provider.filteredEvents[index]));
+                            },
+                            child: _buildEventCard(
+                              provider.filteredEvents[index]['name'],
+                              DateFormat("MMM dd, yyyy").format(
+                                provider.filteredEvents[index]['date'].toDate(),
+                              ),
+                              provider.filteredEvents[index]['description'],
+                              Colors.indigo,
+                            ),
+                          );
+                        },
+                        // children: [
+                        //   _buildEventCard(
+                        //     'Casual Friday',
+                        //     'March 31, 2025',
+                        //     'Wear your best casual outfit',
+                        //     Colors.indigo,
+                        //   ),
+                        //   const SizedBox(height: 12),
+                        //   _buildEventCard(
+                        //     'Weekend Shopping',
+                        //     'April 2, 2025',
+                        //     'Buy new clothes for spring',
+                        //     Colors.green,
+                        //   ),
+                        //   const SizedBox(height: 12),
+                        //   _buildEventCard(
+                        //     'Business Meeting',
+                        //     'April 5, 2025',
+                        //     'Dress formal for client meeting',
+                        //     Colors.orange,
+                        //   ),
+                        // ],
+                      ),
               );
             }),
           ],
@@ -170,7 +174,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       floatingActionButton: FloatingActionButton(
         heroTag: 'Outfit Create',
         onPressed: () {
-          moveTo(context, OutfitEventForm());
+          moveTo(context, const OutfitEventForm());
         },
         backgroundColor: Colors.indigo,
         child: const Icon(Icons.add, color: Colors.white),

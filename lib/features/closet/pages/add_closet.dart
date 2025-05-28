@@ -40,8 +40,6 @@ class _AddClosetState extends State<AddCloset> {
           "Add to Closet",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: SingleChildScrollView(

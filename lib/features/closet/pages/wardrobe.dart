@@ -24,51 +24,29 @@ class WardrobePage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Implement search functionality here
-              showSearch(
-                context: context,
-                delegate: ClothingSearchDelegate(clothType: clothType),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              // Show filter options
-              _showFilterOptions(context);
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.search),
+          //   onPressed: () {
+          //     // Implement search functionality here
+          //     showSearch(
+          //       context: context,
+          //       delegate: ClothingSearchDelegate(clothType: clothType),
+          //     );
+          //   },
+          // ),
+          // IconButton(
+          //   icon: const Icon(Icons.filter_list),
+          //   onPressed: () {
+          //     // Show filter options
+          //     _showFilterOptions(context);
+          //   },
+          // ),
         ],
       ),
       body: Column(
         children: [
-          // Category filters
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-          //   child: SizedBox(
-          //     height: 40,
-          //     child: ListView(
-          //       scrollDirection: Axis.horizontal,
-          //       padding: const EdgeInsets.symmetric(horizontal: 16),
-          //       children: [
-          //         _buildFilterChip('All', true),
-          //         _buildFilterChip('Casual', false),
-          //         _buildFilterChip('Formal', false),
-          //         _buildFilterChip('Sports', false),
-          //         _buildFilterChip('Seasonal', false),
-          //         _buildFilterChip('Favorites', false),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-
           // Main content
           Expanded(
             child: FutureBuilder<QuerySnapshot>(
@@ -428,137 +406,132 @@ class WardrobePage extends StatelessWidget {
   }
 
   // Show filter options
-  void _showFilterOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Filter Options',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Filter sections
-              const Text(
-                'Sort By',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: [
-                  _buildFilterChip('Newest', true),
-                  _buildFilterChip('Oldest', false),
-                  _buildFilterChip('Type', false),
-                  _buildFilterChip('Color', false),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-              const Text(
-                'Color',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: [
-                  _buildFilterChip('All', true),
-                  _buildFilterChip('Red', false),
-                  _buildFilterChip('Blue', false),
-                  _buildFilterChip('Green', false),
-                  _buildFilterChip('Black', false),
-                  _buildFilterChip('White', false),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-              const Text(
-                'Season',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: [
-                  _buildFilterChip('All', true),
-                  _buildFilterChip('Spring', false),
-                  _buildFilterChip('Summer', false),
-                  _buildFilterChip('Fall', false),
-                  _buildFilterChip('Winter', false),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-              const Text(
-                'Fabric',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: [
-                  _buildFilterChip('All', true),
-                  _buildFilterChip('Cotton', false),
-                  _buildFilterChip('Wool', false),
-                  _buildFilterChip('Silk', false),
-                  _buildFilterChip('Linen', false),
-                  _buildFilterChip('Polyester', false),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Reset'),
-                  ),
-                  const SizedBox(width: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.indigo,
-                    ),
-                    child: const Text('Apply'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // void _showFilterOptions(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (context) {
+  //       return Padding(
+  //         padding: const EdgeInsets.all(20.0),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             const Text(
+  //               'Filter Options',
+  //               style: TextStyle(
+  //                 fontSize: 20,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 16),
+  //             // Filter sections
+  //             const Text(
+  //               'Sort By',
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 8),
+  //             Wrap(
+  //               spacing: 8,
+  //               children: [
+  //                 _buildFilterChip('Newest', true),
+  //                 _buildFilterChip('Oldest', false),
+  //                 _buildFilterChip('Type', false),
+  //                 _buildFilterChip('Color', false),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 16),
+  //             const Text(
+  //               'Color',
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 8),
+  //             Wrap(
+  //               spacing: 8,
+  //               children: [
+  //                 _buildFilterChip('All', true),
+  //                 _buildFilterChip('Red', false),
+  //                 _buildFilterChip('Blue', false),
+  //                 _buildFilterChip('Green', false),
+  //                 _buildFilterChip('Black', false),
+  //                 _buildFilterChip('White', false),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 16),
+  //             const Text(
+  //               'Season',
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 8),
+  //             Wrap(
+  //               spacing: 8,
+  //               children: [
+  //                 _buildFilterChip('All', true),
+  //                 _buildFilterChip('Spring', false),
+  //                 _buildFilterChip('Summer', false),
+  //                 _buildFilterChip('Fall', false),
+  //                 _buildFilterChip('Winter', false),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 16),
+  //             const Text(
+  //               'Fabric',
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 8),
+  //             Wrap(
+  //               spacing: 8,
+  //               children: [
+  //                 _buildFilterChip('All', true),
+  //                 _buildFilterChip('Cotton', false),
+  //                 _buildFilterChip('Wool', false),
+  //                 _buildFilterChip('Silk', false),
+  //                 _buildFilterChip('Linen', false),
+  //                 _buildFilterChip('Polyester', false),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 24),
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.end,
+  //               children: [
+  //                 TextButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: const Text('Reset'),
+  //                 ),
+  //                 const SizedBox(width: 16),
+  //                 ElevatedButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                   },
+  //                   style: ElevatedButton.styleFrom(
+  //                     backgroundColor: Colors.indigo,
+  //                   ),
+  //                   child: const Text('Apply'),
+  //                 ),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   // Show item details
   void _showItemDetails(BuildContext context, DocumentSnapshot doc) {
@@ -742,224 +715,224 @@ class WardrobePage extends StatelessWidget {
   }
 }
 
-// Search delegate for clothing items
-class ClothingSearchDelegate extends SearchDelegate {
-  final String clothType;
+// // Search delegate for clothing items
+// class ClothingSearchDelegate extends SearchDelegate {
+//   final String clothType;
 
-  ClothingSearchDelegate({required this.clothType});
+//   ClothingSearchDelegate({required this.clothType});
 
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
+//   @override
+//   List<Widget> buildActions(BuildContext context) {
+//     return [
+//       IconButton(
+//         icon: const Icon(Icons.clear),
+//         onPressed: () {
+//           query = '';
+//         },
+//       ),
+//     ];
+//   }
 
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
+//   @override
+//   Widget buildLeading(BuildContext context) {
+//     return IconButton(
+//       icon: const Icon(Icons.arrow_back),
+//       onPressed: () {
+//         close(context, null);
+//       },
+//     );
+//   }
 
-  @override
-  Widget buildResults(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance
-          .collection('closet')
-          .where('cloth', isEqualTo: clothType)
-          .where('type', isGreaterThanOrEqualTo: query)
-          .where('type', isLessThanOrEqualTo: query + '\uf8ff')
-          .get(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+//   @override
+//   Widget buildResults(BuildContext context) {
+//     return FutureBuilder<QuerySnapshot>(
+//       future: FirebaseFirestore.instance
+//           .collection('closet')
+//           .where('cloth', isEqualTo: clothType)
+//           .where('type', isGreaterThanOrEqualTo: query)
+//           .where('type', isLessThanOrEqualTo: query + '\uf8ff')
+//           .get(),
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const Center(child: CircularProgressIndicator());
+//         }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
-                const SizedBox(height: 16),
-                Text(
-                  'No results found for "$query"',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
+//         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+//           return Center(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+//                 const SizedBox(height: 16),
+//                 Text(
+//                   'No results found for "$query"',
+//                   style: TextStyle(
+//                     fontSize: 16,
+//                     color: Colors.grey[600],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           );
+//         }
 
-        return ListView.builder(
-          itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, index) {
-            final doc = snapshot.data!.docs[index];
-            final data = doc.data() as Map<String, dynamic>;
+//         return ListView.builder(
+//           itemCount: snapshot.data!.docs.length,
+//           itemBuilder: (context, index) {
+//             final doc = snapshot.data!.docs[index];
+//             final data = doc.data() as Map<String, dynamic>;
 
-            return ListTile(
-              leading: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: data['imageUrl'] != null && data['imageUrl'].isNotEmpty
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          data['imageUrl'],
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.image, color: Colors.grey);
-                          },
-                        ),
-                      )
-                    : const Icon(Icons.image, color: Colors.grey),
-              ),
-              title: Text(data['type'] ?? 'Unknown Type'),
-              subtitle: Text(data['fabric'] ?? 'Unknown Fabric'),
-              trailing: Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: _getColorFromString(data['color'] ?? 'grey'),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-              ),
-              onTap: () {
-                close(context, null);
-                // Navigate to item details or do something with the selected item
-              },
-            );
-          },
-        );
-      },
-    );
-  }
+//             return ListTile(
+//               leading: Container(
+//                 width: 48,
+//                 height: 48,
+//                 decoration: BoxDecoration(
+//                   color: Colors.grey[200],
+//                   borderRadius: BorderRadius.circular(8),
+//                 ),
+//                 child: data['imageUrl'] != null && data['imageUrl'].isNotEmpty
+//                     ? ClipRRect(
+//                         borderRadius: BorderRadius.circular(8),
+//                         child: Image.network(
+//                           data['imageUrl'],
+//                           fit: BoxFit.cover,
+//                           errorBuilder: (context, error, stackTrace) {
+//                             return const Icon(Icons.image, color: Colors.grey);
+//                           },
+//                         ),
+//                       )
+//                     : const Icon(Icons.image, color: Colors.grey),
+//               ),
+//               title: Text(data['type'] ?? 'Unknown Type'),
+//               subtitle: Text(data['fabric'] ?? 'Unknown Fabric'),
+//               trailing: Container(
+//                 width: 24,
+//                 height: 24,
+//                 decoration: BoxDecoration(
+//                   color: _getColorFromString(data['color'] ?? 'grey'),
+//                   shape: BoxShape.circle,
+//                   border: Border.all(color: Colors.grey.shade300),
+//                 ),
+//               ),
+//               onTap: () {
+//                 close(context, null);
+//                 // Navigate to item details or do something with the selected item
+//               },
+//             );
+//           },
+//         );
+//       },
+//     );
+//   }
 
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance
-          .collection('closet')
-          .where('cloth', isEqualTo: clothType)
-          .limit(5)
-          .get(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+//   @override
+//   Widget buildSuggestions(BuildContext context) {
+//     return FutureBuilder<QuerySnapshot>(
+//       future: FirebaseFirestore.instance
+//           .collection('closet')
+//           .where('cloth', isEqualTo: clothType)
+//           .limit(5)
+//           .get(),
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const Center(child: CircularProgressIndicator());
+//         }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.search, size: 64, color: Colors.grey[400]),
-                const SizedBox(height: 16),
-                Text(
-                  'Search your ${clothType.toLowerCase()}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
+//         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+//           return Center(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Icon(Icons.search, size: 64, color: Colors.grey[400]),
+//                 const SizedBox(height: 16),
+//                 Text(
+//                   'Search your ${clothType.toLowerCase()}',
+//                   style: TextStyle(
+//                     fontSize: 16,
+//                     color: Colors.grey[600],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           );
+//         }
 
-        return ListView.builder(
-          itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, index) {
-            final doc = snapshot.data!.docs[index];
-            final data = doc.data() as Map<String, dynamic>;
+//         return ListView.builder(
+//           itemCount: snapshot.data!.docs.length,
+//           itemBuilder: (context, index) {
+//             final doc = snapshot.data!.docs[index];
+//             final data = doc.data() as Map<String, dynamic>;
 
-            return ListTile(
-              leading: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: data['imageUrl'] != null && data['imageUrl'].isNotEmpty
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          data['imageUrl'],
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.image, color: Colors.grey);
-                          },
-                        ),
-                      )
-                    : const Icon(Icons.image, color: Colors.grey),
-              ),
-              title: Text(data['type'] ?? 'Unknown Type'),
-              subtitle: Text(data['fabric'] ?? 'Unknown Fabric'),
-              trailing: Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: _getColorFromString(data['color'] ?? 'grey'),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-              ),
-              onTap: () {
-                query = data['type'] ?? '';
-                showResults(context);
-              },
-            );
-          },
-        );
-      },
-    );
-  }
+//             return ListTile(
+//               leading: Container(
+//                 width: 48,
+//                 height: 48,
+//                 decoration: BoxDecoration(
+//                   color: Colors.grey[200],
+//                   borderRadius: BorderRadius.circular(8),
+//                 ),
+//                 child: data['imageUrl'] != null && data['imageUrl'].isNotEmpty
+//                     ? ClipRRect(
+//                         borderRadius: BorderRadius.circular(8),
+//                         child: Image.network(
+//                           data['imageUrl'],
+//                           fit: BoxFit.cover,
+//                           errorBuilder: (context, error, stackTrace) {
+//                             return const Icon(Icons.image, color: Colors.grey);
+//                           },
+//                         ),
+//                       )
+//                     : const Icon(Icons.image, color: Colors.grey),
+//               ),
+//               title: Text(data['type'] ?? 'Unknown Type'),
+//               subtitle: Text(data['fabric'] ?? 'Unknown Fabric'),
+//               trailing: Container(
+//                 width: 24,
+//                 height: 24,
+//                 decoration: BoxDecoration(
+//                   color: _getColorFromString(data['color'] ?? 'grey'),
+//                   shape: BoxShape.circle,
+//                   border: Border.all(color: Colors.grey.shade300),
+//                 ),
+//               ),
+//               onTap: () {
+//                 query = data['type'] ?? '';
+//                 showResults(context);
+//               },
+//             );
+//           },
+//         );
+//       },
+//     );
+//   }
 
-  Color _getColorFromString(String colorName) {
-    switch (colorName.toLowerCase()) {
-      case 'red':
-        return Colors.red;
-      case 'blue':
-        return Colors.blue;
-      case 'green':
-        return Colors.green;
-      case 'yellow':
-        return Colors.yellow;
-      case 'orange':
-        return Colors.orange;
-      case 'purple':
-        return Colors.purple;
-      case 'pink':
-        return Colors.pink;
-      case 'brown':
-        return Colors.brown;
-      case 'black':
-        return Colors.black;
-      case 'white':
-        return Colors.white;
-      case 'grey':
-      case 'gray':
-        return Colors.grey;
-      default:
-        return Colors.grey;
-    }
-  }
-}
+//   Color _getColorFromString(String colorName) {
+//     switch (colorName.toLowerCase()) {
+//       case 'red':
+//         return Colors.red;
+//       case 'blue':
+//         return Colors.blue;
+//       case 'green':
+//         return Colors.green;
+//       case 'yellow':
+//         return Colors.yellow;
+//       case 'orange':
+//         return Colors.orange;
+//       case 'purple':
+//         return Colors.purple;
+//       case 'pink':
+//         return Colors.pink;
+//       case 'brown':
+//         return Colors.brown;
+//       case 'black':
+//         return Colors.black;
+//       case 'white':
+//         return Colors.white;
+//       case 'grey':
+//       case 'gray':
+//         return Colors.grey;
+//       default:
+//         return Colors.grey;
+//     }
+//   }
+// }

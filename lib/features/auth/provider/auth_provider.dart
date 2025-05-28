@@ -69,11 +69,4 @@ class AuthenProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  getUserDetails() async {
-    final res = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(_auth.currentUser!.uid)
-        .get();
-  }
 }

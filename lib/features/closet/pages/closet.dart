@@ -1,3 +1,4 @@
+import 'package:closet_craft_project/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'wardrobe.dart';
 import 'add_closet.dart';
@@ -12,17 +13,6 @@ class ClosetPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Your Closet',
             style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddCloset()),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -49,8 +39,8 @@ class ClosetPage extends StatelessWidget {
                   _buildCategoryCard(
                     context,
                     'Shirts',
+                    'Shirts',
                     'images/shirt.png',
-                    5,
                     const WardrobePage(
                       clothType: 'Shirt',
                     ),
@@ -58,26 +48,26 @@ class ClosetPage extends StatelessWidget {
                   _buildCategoryCard(
                     context,
                     'T-Shirts',
+                    'T-Shirts',
                     'images/tshirt.png',
-                    8,
                     const WardrobePage(
                       clothType: 'Tshirt',
                     ),
                   ),
                   _buildCategoryCard(
                     context,
+                    'Bottom Wear',
                     'Pants',
                     'images/pants.png',
-                    4,
                     const WardrobePage(
                       clothType: 'Pant',
                     ),
                   ),
                   _buildCategoryCard(
                     context,
+                    'Foot Wear',
                     'Shoes',
                     'images/shoes.jpg',
-                    3,
                     const WardrobePage(
                       clothType: 'Shoe',
                     ),
@@ -118,8 +108,8 @@ class ClosetPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(
-      BuildContext context, String title, String icon, int count, Widget page) {
+  Widget _buildCategoryCard(BuildContext context, String title, String type,
+      String icon, Widget page) {
     return InkWell(
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => page)),
@@ -145,14 +135,14 @@ class ClosetPage extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: const BoxDecoration(
-                color: Colors.indigo,
+                color: closetCategoryColor,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),
                 ),
               ),
               child: Text(
-                '$title ($count)',
+                title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,
