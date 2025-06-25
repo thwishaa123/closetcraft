@@ -115,6 +115,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: Colors.deepPurple,
+                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -126,7 +127,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               _fullnameController.text.trim());
                           if (context.mounted) {
                             if (res) {
-                              moveTo(context, const HomeScreen());
+                              moveUntil(context, const HomeScreen());
                             } else {
                               showSnackBar(context, "Something went wrong!!");
                             }

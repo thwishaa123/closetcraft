@@ -61,26 +61,25 @@ class Response {
 
 class Wear {
   Wear({
+    required this.id,
     required this.cloth,
     required this.description,
-    required this.image,
     required this.color,
     required this.weather,
     required this.fabric,
   });
-
+  final String? id;
   final String? cloth;
   final String? description;
-  final String? image;
   final String? color;
   final String? weather;
   final String? fabric;
 
   factory Wear.fromJson(Map<String, dynamic> json) {
     return Wear(
+      id: json['id'],
       cloth: json["cloth"],
       description: json["description"],
-      image: json["image"],
       color: json["color"],
       weather: json["weather"],
       fabric: json["fabric"],
@@ -88,9 +87,9 @@ class Wear {
   }
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "cloth": cloth,
         "description": description,
-        "image": image,
         "color": color,
         "weather": weather,
         "fabric": fabric,

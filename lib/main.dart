@@ -2,6 +2,7 @@ import 'package:closet_craft_project/features/auth/pages/login.dart';
 import 'package:closet_craft_project/features/bottom_navigation/bottom_navigation.dart';
 import 'package:closet_craft_project/features/calendar/provider/outfit_event_provider.dart';
 import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
+import 'package:closet_craft_project/features/onboarding/onboarding_page.dart';
 import 'package:closet_craft_project/features/profile/provider/profile_provider.dart';
 import 'package:closet_craft_project/features/recommendation/provider/recommendation_provider.dart';
 import 'package:closet_craft_project/features/weather/provider/weather_provider.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App name',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: const AppBarTheme(
@@ -56,7 +58,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.hasData && snapshot.data != null) {
               return const HomeScreen();
             }
-            return const LoginPage();
+            return const OnboardingPage();
           }), // first page when app opens
     );
   }

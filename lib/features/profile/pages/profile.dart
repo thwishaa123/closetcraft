@@ -28,14 +28,6 @@ class ProfilePage extends StatelessWidget {
           'Profile',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Edit profile functionality
-            },
-          ),
-        ],
       ),
       body: Consumer<ProfileProvider>(
         builder: (context, provider, _) {

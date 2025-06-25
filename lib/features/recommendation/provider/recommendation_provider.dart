@@ -37,7 +37,7 @@ class RecommendationProvider with ChangeNotifier {
   // }
 
   Future<GeminiResponse?> chatWithGemini(
-      String closetData, String weatherData) async {
+      List<Map<String, dynamic>> closetData, String weatherData) async {
     _loading = true;
     notifyListeners();
 
@@ -56,12 +56,12 @@ class RecommendationProvider with ChangeNotifier {
                     Shirts
                     T-shirts
                     Pants
-                    Footwear(named as shoe)
+                    Shoe
 
                     Closet Data is in this format
                      {
+                      'id': id for each cloth
                       'cloth': cloth,
-                      'image': imageUrl,
                       'color': color,
                       'weather': weather,
                       'fabric': fabric
@@ -71,7 +71,7 @@ class RecommendationProvider with ChangeNotifier {
                      - Choose:
                     One topwear (either a shirt or a t-shirt — pick the best one overall from both categories).
                     One bottomwear (a pant).
-                    One footwear.
+                    One footwear (a shoe)
                     Select items that best match together, considering: Style, Color Coordination, 
                     Season Appropriateness, Comfort, Occasion Suitability, and Trendiness.
 
@@ -81,40 +81,37 @@ class RecommendationProvider with ChangeNotifier {
                   here is the example - 
                   "response": {
                     "topwear": {
+                      "id": id for each cloth
                       "cloth": "shirt or t-shirt",
                       "description": "Short reason why this topwear was selected",
-                      "image": "Image URL or placeholder",
                       "color": "blue",
                       "weather": "Best season to wear",
                       "fabric" : "cotton"
                     },
                     "bottomwear": {
-                      // "name": "Selected Bottomwear Name",
+                      "id": id for each cloth
                       "cloth": "Pant",
-                      "description": "Short reason why this bottomwear was selected",
-                      "image": "Image URL or placeholder",
+                      "description": "Short reason why this bottomwear was selected,
                       "color": "blue",
                       "weather": "Best season to wear",
                       "fabric" : "cotton"
                     },
                     "footwear": {
-                      // "name": "Selected Footwear Name",
+                      "id": id for each cloth
                       "cloth": "Shoe",
                       "description": "Short reason why this footwear was selected",
-                      "image": "Image URL or placeholder",
                       "color": "blue",
                       "weather": "Best season to wear",
                       "fabric" : "cotton"
                     },
                     "tips": [
-                      "Add some more suggestion according to fashio expert"
+                      "Add some more suggestion according to fashion expert"
                     ],
                     "notes": "Add any additional information into this"
                   },
 
                   Respond only with valid JSON. Do not include explanations or extra text outside the JSON.
-                  Keep responses friendly, clear, and easy to understand for home cooks.
-                  If a user requests a specific dish or ingredient, tailor the recipe accordingly.
+                  Keep responses friendly, clear, and easy to understand for users.
                   ''',
             },
           },
@@ -124,19 +121,20 @@ class RecommendationProvider with ChangeNotifier {
               "parts": [
                 {
                   "text": '''
-                    I have the following items in my closet. Select the best outfit by picking:
-                    - One topwear (choose from shirts and t-shirts)
-                    - One bottomwear (pant)
-                    - One footwear
+                    I have the following items in my closet.
+                    Here is the closet Data in json format:
+                    $closetData
 
-                    Each clothing item has a cloth, image (if available), color, season, and fabric.
+                    Select the best outfit by cloth type variable from closetData:
+                    - One topwear (choose from Shirt and Tshirt)
+                    - One bottomwear (choosen from Pant cloth)
+                    - One footwear (choosen from Shoe cloth)
+
+                    Each clothing item has a id, cloth, color, weather(season), and fabric.
+                    Suggest according to my location weather: $weatherData
+                    Make sure respond with each variable id, cloth, weather and fabric
 
                     Please respond only with the final selected outfit in structured JSON with three sections: topwear, bottomwear, and footwear. Use only one item in each category.
-
-                    Suggest according to my location weather: $weatherData
-                    Here is my closet:
-                    $closetData
-                    
                   '''
                 },
               ],
@@ -173,6 +171,7 @@ class RecommendationProvider with ChangeNotifier {
       // print('internal error');
       return null;
     } catch (e) {
+      _errorMessage = e.toString();
       log(e.toString());
       return null;
     } finally {

@@ -39,9 +39,9 @@ class ClosetProvider with ChangeNotifier {
     }
   }
 
-  String? _closetData;
-  String? get closetData => _closetData;
-  Future<String?> getAllClothFromCloset() async {
+  List<Map<String, dynamic>> _closetData = [];
+  List<Map<String, dynamic>> get closetData => _closetData;
+  Future<List<Map<String, dynamic>>> getAllClothFromCloset() async {
     _loading = true;
     notifyListeners();
 
@@ -51,9 +51,14 @@ class ClosetProvider with ChangeNotifier {
           // .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
-      final closet = res.docs.map((e) => e.data()).toString();
+      final closet = res.docs.map((e) {
+        var map = e.data();
+        map['id'] = e.id;
+        return map;
+      }).toList();
+
       _closetData = closet;
-      log(closet);
+      log(closet.toString());
       return _closetData;
     } catch (e) {
       _error = e.toString();

@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(
               icon: (Image.asset(
-                'images/closet.png',
+                'assets/images/closet.png',
                 width: 27,
               )),
               label: 'Closet'),

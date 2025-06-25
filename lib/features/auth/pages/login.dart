@@ -104,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: Colors.deepPurple,
+                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -114,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                               _passwordController.text.trim());
                           if (context.mounted) {
                             if (res) {
-                              moveTo(context, const HomeScreen());
+                              moveUntil(context, const HomeScreen());
                             } else {
                               showSnackBar(context, "Something went wrong!!");
                             }

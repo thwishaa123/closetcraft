@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
-import 'package:closet_craft_project/features/recommendation/recommendation_page.dart';
-import 'package:closet_craft_project/utils/utils.dart';
+import 'package:closet_craft_project/features/weather/suggest_outfit_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -114,125 +111,106 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            // Weather overview card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(
-                    weatherIcons[weatherCondition] ?? Icons.cloud,
-                    size: 32,
-                    color: Colors.indigo,
-                  ),
-                  // Text(
-                  //   weatherCondition,
-                  //   style: const TextStyle(
-                  //     fontSize: 20,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
-                  Text(
-                    "$temperature°C",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              // Weather overview card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on, color: Colors.indigo),
-                      Text(locationName),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Weather details
-            WeatherInfoRow(
-                icon: Icons.thermostat,
-                label: "Temperature",
-                value: "$temperature°C"),
-            WeatherInfoRow(
-                icon: weatherIcons[weatherCondition] ?? Icons.question_mark,
-                label: "Condition",
-                value: weatherCondition),
-            WeatherInfoRow(
-                icon: Icons.water_drop, label: "Humidity", value: "$humidity%"),
-            WeatherInfoRow(
-                icon: Icons.air, label: "Wind", value: "$windSpeed km/h"),
-
-            const SizedBox(height: 20),
-
-            // Outfit suggestion
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Text(
-                _getOutfitSuggestion(),
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // suggestion button
-            ElevatedButton(
-              onPressed: () async {
-                final res = await context
-                    .read<ClosetProvider>()
-                    .getAllClothFromCloset();
-
-                if (weatherData == null) {
-                  showSnackBar(context,
-                      "Unavailable Weather Data, try to connect to internet and refresh");
-                  return;
-                }
-                if (res != null && weatherData != null && context.mounted) {
-                  moveTo(
-                    context,
-                    OutfitRecommendationScreen(
-                      closetData: res,
-                      weatherData: weatherData!,
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(
+                      weatherIcons[weatherCondition] ?? Icons.cloud,
+                      size: 32,
+                      color: Colors.indigo,
                     ),
-                  );
-                } else {
-                  showSnackBar(context, "No Closet Data");
-                }
-              },
-              child: const Text('Build Outfit'),
-            )
-          ],
+                    // Text(
+                    //   weatherCondition,
+                    //   style: const TextStyle(
+                    //     fontSize: 20,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    Text(
+                      "$temperature°C",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on, color: Colors.indigo),
+                        Text(locationName),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Weather details
+              WeatherInfoRow(
+                  icon: Icons.thermostat,
+                  label: "Temperature",
+                  value: "$temperature°C"),
+              WeatherInfoRow(
+                  icon: weatherIcons[weatherCondition] ?? Icons.question_mark,
+                  label: "Condition",
+                  value: weatherCondition),
+              WeatherInfoRow(
+                  icon: Icons.water_drop,
+                  label: "Humidity",
+                  value: "$humidity%"),
+              WeatherInfoRow(
+                  icon: Icons.air, label: "Wind", value: "$windSpeed km/h"),
+
+              const SizedBox(height: 20),
+
+              // Outfit suggestion
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  _getOutfitSuggestion(),
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              FashionCard(
+                weatherData: weatherData,
+              )
+            ],
+          ),
         ),
       ),
     );
