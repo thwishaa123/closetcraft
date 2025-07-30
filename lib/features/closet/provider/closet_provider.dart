@@ -26,7 +26,7 @@ class ClosetProvider with ChangeNotifier {
         'color': color,
         'weather': weather,
         'fabric': fabric,
-        // 'uid': FirebaseAuth.instance.currentUser!.uid,
+        'uid': FirebaseAuth.instance.currentUser!.uid,
         'dateAdded': Timestamp.now(),
       });
       return true;
@@ -48,7 +48,7 @@ class ClosetProvider with ChangeNotifier {
     try {
       final res = await FirebaseFirestore.instance
           .collection('closet')
-          // .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
       final closet = res.docs.map((e) {
@@ -58,7 +58,7 @@ class ClosetProvider with ChangeNotifier {
       }).toList();
 
       _closetData = closet;
-      log(closet.toString());
+      log(closet.length.toString());
       return _closetData;
     } catch (e) {
       _error = e.toString();

@@ -48,17 +48,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyD9wz3nbJb0QdbU-ln9wmiuYUQl_5jDWwo',
-    appId: '1:719799195731:web:2f042eeae511dbf5780ea6',
+    appId: '1:719799195731:web:a4f4f715c3653b51780ea6',
     messagingSenderId: '719799195731',
     projectId: 'closetcraft-34c9f',
     authDomain: 'closetcraft-34c9f.firebaseapp.com',
     storageBucket: 'closetcraft-34c9f.firebasestorage.app',
-    measurementId: 'G-819W9VCCCB',
+    measurementId: 'G-H559PT385G',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD7TkE0JtnNJ8b3Z6EB3rnYQpS9shC2iRM',
-    appId: '1:719799195731:android:0b200954b8e681ac780ea6',
+    appId: '1:719799195731:android:0b9e8519eea5a2da780ea6',
     messagingSenderId: '719799195731',
     projectId: 'closetcraft-34c9f',
     storageBucket: 'closetcraft-34c9f.firebasestorage.app',
@@ -66,10 +66,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCnfyXyT6YyqjUbAouPvYMS3ObUwTrzYv8',
-    appId: '1:719799195731:ios:62b1c40cc76e0eca780ea6',
+    appId: '1:719799195731:ios:c698507e4727793f780ea6',
     messagingSenderId: '719799195731',
     projectId: 'closetcraft-34c9f',
     storageBucket: 'closetcraft-34c9f.firebasestorage.app',
-    iosBundleId: 'com.example.closetCraftProject',
+    iosBundleId: 'com.revastra.app',
   );
+
 }

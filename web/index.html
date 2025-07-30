@@ -1,38 +1,236 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="A smart wardrobe management">
 
-  <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="closet_craft_project">
+  <meta name="apple-mobile-web-app-title" content="Revastra">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>closet_craft_project</title>
+  <title>Revastra</title>
   <link rel="manifest" href="manifest.json">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      overflow: hidden;
+    }
+
+    #loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: opacity 0.5s ease-out;
+    }
+
+    .loading-logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 30px;
+      border-radius: 50%;  /* Makes it circular */
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+      animation: logoFloat 3s ease-in-out infinite;
+      overflow: hidden;  /* This ensures the image doesn't overflow the circular border */
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    .loading-text {
+      color: white;
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .loading-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      text-align: center;
+      animation: fadeInOut 3s ease-in-out infinite;
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 4px;
+      margin-top: 15px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.7);
+      animation: dotPulse 1.5s ease-in-out infinite;
+    }
+
+    .dot:nth-child(1) { animation-delay: 0s; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* Glassmorphism effect */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .loading-logo {
+        width: 100px;
+        height: 100px;
+        font-size: 24px;
+        margin-bottom: 40px;
+      }
+      
+      .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border-width: 4px;
+        margin-bottom: 25px;
+      }
+      
+      .loading-text {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+      
+      .loading-subtitle {
+        font-size: 14px;
+      }
+      
+      .glass-card {
+        padding: 50px 40px;
+        margin: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .loading-dots {
+        margin-top: 20px;
+      }
+      
+      .dot {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    /* Hide loading when Flutter is ready */
+    .flutter-ready #loading-container {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
+  <div id="loading-container">
+    <div class="glass-card">
+      <div class="loading-logo">
+         <img src="icons/icon-192-maskable.png" alt="Logo" style="width: 80%; height: 80%; object-fit: cover; border-radius: 50%;">
+      </div>
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Revastra</div>
+      <div class="loading-subtitle">Preparing your smart wardrobe</div>
+      <div class="loading-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Hide loading screen when Flutter is ready
+    window.addEventListener('flutter-initialized', function() {
+      document.body.classList.add('flutter-ready');
+      setTimeout(() => {
+        document.getElementById('loading-container').style.display = 'none';
+      }, 500);
+    });
+
+    // Fallback: Hide loading after 10 seconds
+    setTimeout(() => {
+      document.body.classList.add('flutter-ready');
+      setTimeout(() => {
+        document.getElementById('loading-container').style.display = 'none';
+      }, 500);
+    }, 10000);
+  </script>
+  
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

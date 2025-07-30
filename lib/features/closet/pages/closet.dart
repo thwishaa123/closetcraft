@@ -1,5 +1,8 @@
+import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
 import 'package:closet_craft_project/theme/theme.dart';
+import 'package:closet_craft_project/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'wardrobe.dart';
 import 'add_closet.dart';
 
@@ -49,74 +52,91 @@ class ClosetPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Categories Grid
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                childAspectRatio: 0.85,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                children: [
-                  _buildCategoryCard(
-                    context,
-                    'Shirts',
-                    'assets/images/shirt.png',
-                    const WardrobePage(clothType: 'Shirt'),
-                  ),
-                  _buildCategoryCard(
-                    context,
-                    'T-Shirts',
-                    'assets/images/tshirt.png',
-                    const WardrobePage(clothType: 'Tshirt'),
-                  ),
-                  _buildCategoryCard(
-                    context,
-                    'Bottom Wear',
-                    'assets/images/pants.png',
-                    const WardrobePage(clothType: 'Pant'),
-                  ),
-                  _buildCategoryCard(
-                    context,
-                    'Foot Wear',
-                    'assets/images/shoes.jpg',
-                    const WardrobePage(clothType: 'Shoe'),
-                  ),
-                ],
-              ),
+              Consumer<ClosetProvider>(builder: (context, closetPro, _) {
+                if (closetPro.closetData.isNotEmpty) {
+                  var shirts = closetPro.closetData
+                      .where((map) => map["cloth"] == "Shirt")
+                      .toList();
+                  var tshirts = closetPro.closetData
+                      .where((map) => map["cloth"] == "Tshirt")
+                      .toList();
+                  var pants = closetPro.closetData
+                      .where((map) => map["cloth"] == "Pant")
+                      .toList();
+                  var shoes = closetPro.closetData
+                      .where((map) => map["cloth"] == "Shoe")
+                      .toList();
+                  return GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.85,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    children: [
+                      _buildCategoryCard(
+                        context,
+                        'Shirts',
+                        'assets/images/shirt.png',
+                        const WardrobePage(clothType: 'Shirt'),
+                      ),
+                      _buildCategoryCard(
+                        context,
+                        'T-Shirts',
+                        'assets/images/tshirt.png',
+                        const WardrobePage(clothType: 'Tshirt'),
+                      ),
+                      _buildCategoryCard(
+                        context,
+                        'Bottom Wear',
+                        'assets/images/pants.png',
+                        const WardrobePage(clothType: 'Pant'),
+                      ),
+                      _buildCategoryCard(
+                        context,
+                        'Foot Wear',
+                        'assets/images/shoes.jpg',
+                        const WardrobePage(clothType: 'Shoe'),
+                      ),
+                    ],
+                  );
+                }
+                return showLoading();
+              }),
 
               const SizedBox(height: 32),
 
-              // Outfit Suggestions Section
-              Text(
-                'Outfit Suggestions',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: darkTeal,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: 20),
+              // // Outfit Suggestions Section
+              // Text(
+              //   'Outfit Suggestions',
+              //   style: TextStyle(
+              //     fontSize: 20,
+              //     fontWeight: FontWeight.w600,
+              //     color: darkTeal,
+              //     letterSpacing: 0.5,
+              //   ),
+              // ),
+              // const SizedBox(height: 20),
 
-              // Outfit Cards
-              SizedBox(
-                height: 160,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildOutfitCard(
-                        'Casual Friday', '68°F', ['Blue', 'Black']),
-                    const SizedBox(width: 16),
-                    _buildOutfitCard(
-                        'Weekend Style', '72°F', ['Grey', 'Green']),
-                    const SizedBox(width: 16),
-                    _buildOutfitCard(
-                        'Business Meeting', '70°F', ['Black', 'White']),
-                    const SizedBox(width: 20), // Extra space at end
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
+              // // Outfit Cards
+              // SizedBox(
+              //   height: 160,
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
+              //     children: [
+              //       _buildOutfitCard(
+              //           'Casual Friday', '68°F', ['Blue', 'Black']),
+              //       const SizedBox(width: 16),
+              //       _buildOutfitCard(
+              //           'Weekend Style', '72°F', ['Grey', 'Green']),
+              //       const SizedBox(width: 16),
+              //       _buildOutfitCard(
+              //           'Business Meeting', '70°F', ['Black', 'White']),
+              //       const SizedBox(width: 20), // Extra space at end
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(height: 20),
             ],
           ),
         ),

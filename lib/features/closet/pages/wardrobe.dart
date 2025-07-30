@@ -2,6 +2,7 @@ import 'package:closet_craft_project/features/calendar/pages/outfit_event_form.d
 import 'package:closet_craft_project/features/closet/pages/add_closet.dart';
 import 'package:closet_craft_project/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class WardrobePage extends StatelessWidget {
@@ -52,6 +53,8 @@ class WardrobePage extends StatelessWidget {
             child: FutureBuilder<QuerySnapshot>(
               future: FirebaseFirestore.instance
                   .collection('closet')
+                  .where('uid',
+                      isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                   .where('cloth', isEqualTo: clothType)
                   .get(),
               builder: (context, snapshot) {
@@ -129,7 +132,7 @@ class WardrobePage extends StatelessWidget {
         onPressed: () async {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddCloset()),
+            MaterialPageRoute(builder: (context) => const AddCloset()),
           );
         },
         label: Text(

@@ -52,33 +52,18 @@ class OnboardingPage extends StatelessWidget {
                 children: [
                   const Spacer(flex: 2),
 
-                  // App logo/icon
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 20,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.checkroom,
-                      size: 50,
-                      color: Color(0xFF6366F1),
-                    ),
-                  ),
-
+                  SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child:
+                              Image.asset("assets/images/revastra_logo.jpg"))),
                   const SizedBox(height: 40),
 
                   // App title
                   const Text(
-                    'Closet Craft',
+                    'ReVastra',
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,

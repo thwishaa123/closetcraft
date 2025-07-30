@@ -3,6 +3,7 @@ import 'package:closet_craft_project/features/auth/provider/auth_provider.dart';
 import 'package:closet_craft_project/features/bottom_navigation/bottom_navigation.dart';
 import 'package:closet_craft_project/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,10 +13,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late final AuthenProvider authenProvider;
   @override
   void initState() {
-    authenProvider = AuthenProvider();
     super.initState();
   }
 
@@ -90,44 +89,44 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
 
               // Login button
-              ListenableBuilder(
-                  listenable: authenProvider,
-                  builder: (context, _) {
-                    if (authenProvider.loading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: Colors.deepPurple,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () async {
-                          final res = await authenProvider.login(
-                              _emailController.text.trim(),
-                              _passwordController.text.trim());
-                          if (context.mounted) {
-                            if (res) {
-                              moveUntil(context, const HomeScreen());
-                            } else {
-                              showSnackBar(context, "Something went wrong!!");
-                            }
-                          }
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(fontSize: 16),
+              Consumer<AuthenProvider>(
+                builder: (context, provider, _) {
+                  if (provider.loading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Colors.deepPurple,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                    );
-                  }),
+                      onPressed: () async {
+                        final res = await provider.login(
+                            _emailController.text.trim(),
+                            _passwordController.text.trim());
+                        if (context.mounted) {
+                          if (res) {
+                            moveUntil(context, const HomeScreen());
+                          } else {
+                            showSnackBar(context, "Something went wrong!!");
+                          }
+                        }
+                      },
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  );
+                },
+              ),
 
               const SizedBox(height: 30),
               Row(

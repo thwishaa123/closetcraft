@@ -31,7 +31,7 @@ class ProfileProvider extends ChangeNotifier {
     return res.data();
   }
 
-  Future updateDetail(String key, String value) async {
+  Future updateDetail(String key, dynamic value) async {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(_auth.currentUser!.uid)

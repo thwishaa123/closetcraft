@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:719799195731:android:0b200954b8e681ac780ea6",
+        "mobilesdk_app_id": "1:719799195731:android:0b9e8519eea5a2da780ea6",
         "android_client_info": {
-          "package_name": "com.example.closet_craft_project"
+          "package_name": "com.revastra.app"
         }
       },
       "oauth_client": [],

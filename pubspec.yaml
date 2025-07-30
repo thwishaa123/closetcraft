@@ -46,6 +46,7 @@ dependencies:
   geolocator: 
   google_fonts: ^6.2.1
   intl:
+  rename: ^3.1.0
 
 dev_dependencies:
   flutter_test:

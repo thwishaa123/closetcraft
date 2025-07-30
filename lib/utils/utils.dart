@@ -12,3 +12,9 @@ moveUntil(BuildContext context, Widget page) {
 showSnackBar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 }
+
+Widget showLoading() {
+  return const Center(
+    child: CircularProgressIndicator(),
+  );
+}
