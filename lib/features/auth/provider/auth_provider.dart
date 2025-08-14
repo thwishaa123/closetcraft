@@ -13,7 +13,7 @@ class AuthenProvider with ChangeNotifier {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<bool> login(String email, String pass) async {
-    _loading = false;
+    _loading = true;
     notifyListeners();
 
     try {
@@ -36,7 +36,8 @@ class AuthenProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> signup(String email, String pass, String name) async {
+  Future<bool> signup(
+      String email, String pass, String name, String gender) async {
     _loading = true;
     notifyListeners();
 
@@ -53,6 +54,8 @@ class AuthenProvider with ChangeNotifier {
             .set({
           'name': name,
           'email': email,
+          'gender': gender,
+          'style': {},
           'createdAt': Timestamp.now(),
         });
 

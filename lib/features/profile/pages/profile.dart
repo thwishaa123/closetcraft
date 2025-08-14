@@ -32,7 +32,7 @@ class ProfilePage extends StatelessWidget {
       body: Consumer<ProfileProvider>(
         builder: (context, provider, _) {
           if (provider.user != null) {
-            List styleList = provider.user!['style']['Style Preferences'];
+            List styleList = provider.user!['style']['Style Preferences'] ?? [];
             if (styleList.isNotEmpty) {
               favoriteStyle = styleList.first.toString();
             }

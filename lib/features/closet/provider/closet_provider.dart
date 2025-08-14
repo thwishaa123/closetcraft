@@ -29,6 +29,8 @@ class ClosetProvider with ChangeNotifier {
         'uid': FirebaseAuth.instance.currentUser!.uid,
         'dateAdded': Timestamp.now(),
       });
+      await getAllClothFromCloset();
+
       return true;
     } catch (e) {
       _error = e.toString();

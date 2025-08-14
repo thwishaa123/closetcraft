@@ -6,9 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class WardrobePage extends StatelessWidget {
-  const WardrobePage({super.key, required this.clothType});
+  const WardrobePage(
+      {super.key, required this.clothType, required this.clothingItems});
 
   final String clothType;
+  final List<Map<String, dynamic>> clothingItems;
 
   // Method to get the properly formatted title
   String _getFormattedTitle() {
@@ -50,80 +52,98 @@ class WardrobePage extends StatelessWidget {
         children: [
           // Main content
           Expanded(
-            child: FutureBuilder<QuerySnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('closet')
-                  .where('uid',
-                      isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                  .where('cloth', isEqualTo: clothType)
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+            child: clothingItems.isEmpty
+                ? _buildEmptyState(context)
+                : Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.75,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: clothingItems.length,
+                      itemBuilder: (context, index) {
+                        final doc = clothingItems[index];
 
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.error_outline,
-                            size: 48, color: Colors.red[300]),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Something went wrong',
-                          style:
-                              TextStyle(fontSize: 16, color: Colors.grey[700]),
-                        ),
-                        const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Refresh the page
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    WardrobePage(clothType: clothType),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.indigo,
-                          ),
-                          child: const Text('Retry'),
-                        ),
-                      ],
+                        return _buildClothingItem(context, doc);
+                      },
                     ),
-                  );
-                }
-
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return _buildEmptyState(context);
-                }
-
-                // Display items in a grid
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.75,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      final doc = snapshot.data!.docs[index];
-
-                      return _buildClothingItem(context, doc);
-                    },
                   ),
-                );
-              },
-            ),
+            // child: FutureBuilder<QuerySnapshot>(
+            //   future: FirebaseFirestore.instance
+            //       .collection('closet')
+            //       .where('uid',
+            //           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            //       .where('cloth', isEqualTo: clothType)
+            //       .get(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return const Center(
+            //         child: CircularProgressIndicator(),
+            //       );
+            //     }
+            //     if (snapshot.hasError) {
+            //       return Center(
+            //         child: Column(
+            //           mainAxisSize: MainAxisSize.min,
+            //           children: [
+            //             Icon(Icons.error_outline,
+            //                 size: 48, color: Colors.red[300]),
+            //             const SizedBox(height: 16),
+            //             Text(
+            //               'Something went wrong',
+            //               style:
+            //                   TextStyle(fontSize: 16, color: Colors.grey[700]),
+            //             ),
+            //             const SizedBox(height: 8),
+            //             ElevatedButton(
+            //               onPressed: () {
+            //                 // Refresh the page
+            //                 Navigator.pushReplacement(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                     builder: (context) => WardrobePage(
+            //                         clothType: clothType,
+            //                         clothingItems: clothingItems),
+            //                   ),
+            //                 );
+            //               },
+            //               style: ElevatedButton.styleFrom(
+            //                 backgroundColor: Colors.indigo,
+            //               ),
+            //               child: const Text('Retry'),
+            //             ),
+            //           ],
+            //         ),
+            //       );
+            //     }
+            //     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            //       return _buildEmptyState(context);
+            //     }
+            //     // Display items in a grid
+            //     return Padding(
+            //       padding: const EdgeInsets.all(16.0),
+            //       child: GridView.builder(
+            //         gridDelegate:
+            //             const SliverGridDelegateWithFixedCrossAxisCount(
+            //           crossAxisCount: 2,
+            //           childAspectRatio: 0.75,
+            //           crossAxisSpacing: 16,
+            //           mainAxisSpacing: 16,
+            //         ),
+            //         itemCount: snapshot.data!.docs.length,
+            //         itemBuilder: (context, index) {
+            //           final doc = snapshot.data!.docs[index];
+
+            //           return _buildClothingItem(context, doc);
+            //         },
+            //       ),
+            //     );
+            //   },
+            // ),
           ),
         ],
       ),
@@ -150,30 +170,30 @@ class WardrobePage extends StatelessWidget {
     );
   }
 
-  // Filter chip widget
-  Widget _buildFilterChip(String label, bool isSelected) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: FilterChip(
-        label: Text(label),
-        selected: isSelected,
-        onSelected: (bool selected) {
-          // Handle selection
-        },
-        selectedColor: Colors.indigo.withOpacity(0.2),
-        checkmarkColor: Colors.indigo,
-        labelStyle: TextStyle(
-          color: isSelected ? Colors.indigo : Colors.black87,
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-    );
-  }
+  // // Filter chip widget
+  // Widget _buildFilterChip(String label, bool isSelected) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(right: 8.0),
+  //     child: FilterChip(
+  //       label: Text(label),
+  //       selected: isSelected,
+  //       onSelected: (bool selected) {
+  //         // Handle selection
+  //       },
+  //       selectedColor: Colors.indigo.withOpacity(0.2),
+  //       checkmarkColor: Colors.indigo,
+  //       labelStyle: TextStyle(
+  //         color: isSelected ? Colors.indigo : Colors.black87,
+  //         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Clothing item card
-  Widget _buildClothingItem(BuildContext context, QueryDocumentSnapshot doc) {
+  Widget _buildClothingItem(BuildContext context, Map<String, dynamic> data) {
     // Extract data from document
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    // Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     String imageUrl = data['image'] ?? '';
     String fabric = data['fabric'] ?? 'Unknown Fabric';
@@ -183,7 +203,7 @@ class WardrobePage extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Show item details
-        _showItemDetails(context, doc);
+        _showItemDetails(context, data);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -297,7 +317,7 @@ class WardrobePage extends StatelessWidget {
                       const Spacer(),
                       IconButton.filled(
                         onPressed: () {
-                          data['id'] = doc.id;
+                          // data['id'] = doc.id;
                           moveTo(context, OutfitEventForm(outfit: data));
                         },
                         icon: const Icon(Icons.add),
@@ -339,21 +359,6 @@ class WardrobePage extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddCloset()),
-              );
-            },
-            icon: const Icon(Icons.add),
-            label: Text('Add ${clothType.toLowerCase()}'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.indigo,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
           ),
         ],
@@ -537,9 +542,9 @@ class WardrobePage extends StatelessWidget {
   // }
 
   // Show item details
-  void _showItemDetails(BuildContext context, DocumentSnapshot doc) {
+  void _showItemDetails(BuildContext context, Map<String, dynamic> data) {
     // Extract data from document
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    // Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     //String type = data['type'] ?? 'Unknown Type';
     String imageUrl = data['image'] ?? '';
     String fabric = data['fabric'] ?? 'Unknown Fabric';

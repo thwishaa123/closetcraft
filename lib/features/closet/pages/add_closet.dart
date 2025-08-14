@@ -2,12 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:closet_craft_project/data/repo/cloudinary_repo.dart';
 import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
+import 'package:closet_craft_project/features/profile/provider/profile_provider.dart';
 import 'package:closet_craft_project/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddCloset extends StatefulWidget {
   const AddCloset({super.key});
@@ -125,16 +127,43 @@ class _AddClosetState extends State<AddCloset> {
               const SizedBox(height: 16),
 
               // cloth type
-              StylishDropdown(
-                title: "Cloth",
-                icon: Icons.checkroom,
-                values: const ["Shirt", "Tshirt", "Pant", "Shoe"],
-                onchange: (value) {
-                  setState(() {
-                    cloth = value;
-                  });
-                },
-              ),
+              Consumer<ProfileProvider>(builder: (context, provider, _) {
+                if (provider.user != null) {
+                  if (provider.user!['gender'] == 'Male') {
+                    return StylishDropdown(
+                      title: "Cloth",
+                      icon: Icons.checkroom,
+                      values: const ["Shirt", "Tshirt", "Pant", "Shoe"],
+                      onchange: (value) {
+                        setState(() {
+                          cloth = value;
+                        });
+                      },
+                    );
+                  } else {
+                    return StylishDropdown(
+                      title: "Cloth",
+                      icon: Icons.checkroom,
+                      values: const [
+                        "Top",
+                        "Pant",
+                        "Short",
+                        "Dress",
+                        "Skirt",
+                        "Footwear",
+                        "Activewear",
+                        "Accessory",
+                      ],
+                      onchange: (value) {
+                        setState(() {
+                          cloth = value;
+                        });
+                      },
+                    );
+                  }
+                }
+                return const SizedBox.shrink();
+              }),
               const SizedBox(height: 16),
 
               // Color Selection

@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
+import 'package:closet_craft_project/features/profile/provider/profile_provider.dart';
 import 'package:closet_craft_project/theme/theme.dart';
 import 'package:closet_craft_project/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -52,91 +55,173 @@ class ClosetPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Categories Grid
-              Consumer<ClosetProvider>(builder: (context, closetPro, _) {
-                if (closetPro.closetData.isNotEmpty) {
-                  var shirts = closetPro.closetData
-                      .where((map) => map["cloth"] == "Shirt")
-                      .toList();
-                  var tshirts = closetPro.closetData
-                      .where((map) => map["cloth"] == "Tshirt")
-                      .toList();
-                  var pants = closetPro.closetData
-                      .where((map) => map["cloth"] == "Pant")
-                      .toList();
-                  var shoes = closetPro.closetData
-                      .where((map) => map["cloth"] == "Shoe")
-                      .toList();
-                  return GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.85,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    children: [
-                      _buildCategoryCard(
-                        context,
-                        'Shirts',
-                        'assets/images/shirt.png',
-                        const WardrobePage(clothType: 'Shirt'),
-                      ),
-                      _buildCategoryCard(
-                        context,
-                        'T-Shirts',
-                        'assets/images/tshirt.png',
-                        const WardrobePage(clothType: 'Tshirt'),
-                      ),
-                      _buildCategoryCard(
-                        context,
-                        'Bottom Wear',
-                        'assets/images/pants.png',
-                        const WardrobePage(clothType: 'Pant'),
-                      ),
-                      _buildCategoryCard(
-                        context,
-                        'Foot Wear',
-                        'assets/images/shoes.jpg',
-                        const WardrobePage(clothType: 'Shoe'),
-                      ),
-                    ],
-                  );
-                }
-                return showLoading();
-              }),
 
               const SizedBox(height: 32),
 
-              // // Outfit Suggestions Section
-              // Text(
-              //   'Outfit Suggestions',
-              //   style: TextStyle(
-              //     fontSize: 20,
-              //     fontWeight: FontWeight.w600,
-              //     color: darkTeal,
-              //     letterSpacing: 0.5,
-              //   ),
-              // ),
-              // const SizedBox(height: 20),
+              Consumer<ProfileProvider>(
+                builder: (context, profilePro, _) {
+                  if (profilePro.user != null) {
+                    log(profilePro.user!['gender'].toString());
+                    if (profilePro.user!['gender'] == 'Male') {
+                      return Consumer<ClosetProvider>(
+                        builder: (context, closetPro, _) {
+                          var shirts = closetPro.closetData
+                              .where((map) => map["cloth"] == "Shirt")
+                              .toList();
+                          var tshirts = closetPro.closetData
+                              .where((map) => map["cloth"] == "Tshirt")
+                              .toList();
+                          var pants = closetPro.closetData
+                              .where((map) => map["cloth"] == "Pant")
+                              .toList();
+                          var shoes = closetPro.closetData
+                              .where((map) => map["cloth"] == "Shoe")
+                              .toList();
+                          return GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.85,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            children: [
+                              _buildCategoryCard(
+                                context,
+                                'Shirts',
+                                'assets/images/shirt.png',
+                                WardrobePage(
+                                    clothType: 'Shirt', clothingItems: shirts),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'T-Shirts',
+                                'assets/images/tshirt.png',
+                                WardrobePage(
+                                    clothType: 'Tshirt',
+                                    clothingItems: tshirts),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Bottom Wear',
+                                'assets/images/pants.png',
+                                WardrobePage(
+                                    clothType: 'Pant', clothingItems: pants),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Foot Wear',
+                                'assets/images/shoes.jpg',
+                                WardrobePage(
+                                    clothType: 'Shoe', clothingItems: shoes),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      return Consumer<ClosetProvider>(
+                        builder: (context, closetPro, _) {
+                          var tops = closetPro.closetData
+                              .where((map) => map["cloth"] == "Top")
+                              .toList();
+                          var pants = closetPro.closetData
+                              .where((map) => map["cloth"] == "Pant")
+                              .toList();
+                          var shorts = closetPro.closetData
+                              .where((map) => map["cloth"] == "Short")
+                              .toList();
+                          var skirts = closetPro.closetData
+                              .where((map) => map["cloth"] == "Skirt")
+                              .toList();
+                          var dresses = closetPro.closetData
+                              .where((map) => map["cloth"] == "Dress")
+                              .toList();
+                          var activewear = closetPro.closetData
+                              .where((map) => map["cloth"] == "Activewear")
+                              .toList();
+                          var accessories = closetPro.closetData
+                              .where((map) => map["cloth"] == "Accessory")
+                              .toList();
+                          var footwear = closetPro.closetData
+                              .where((map) => map["cloth"] == "Footwear")
+                              .toList();
 
-              // // Outfit Cards
-              // SizedBox(
-              //   height: 160,
-              //   child: ListView(
-              //     scrollDirection: Axis.horizontal,
-              //     children: [
-              //       _buildOutfitCard(
-              //           'Casual Friday', '68°F', ['Blue', 'Black']),
-              //       const SizedBox(width: 16),
-              //       _buildOutfitCard(
-              //           'Weekend Style', '72°F', ['Grey', 'Green']),
-              //       const SizedBox(width: 16),
-              //       _buildOutfitCard(
-              //           'Business Meeting', '70°F', ['Black', 'White']),
-              //       const SizedBox(width: 20), // Extra space at end
-              //     ],
-              //   ),
-              // ),
-              // const SizedBox(height: 20),
+                          return GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.85,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            children: [
+                              _buildCategoryCard(
+                                context,
+                                'Tops',
+                                'assets/images/female/tops.jpeg',
+                                WardrobePage(
+                                    clothType: 'Top', clothingItems: tops),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Pants',
+                                'assets/images/female/pants.jpeg',
+                                WardrobePage(
+                                    clothType: 'Pant', clothingItems: pants),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Shorts',
+                                'assets/images/female/shorts.jpeg',
+                                WardrobePage(
+                                    clothType: 'Short', clothingItems: shorts),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Skirts',
+                                'assets/images/female/skirts.jpeg',
+                                WardrobePage(
+                                    clothType: 'Skirt', clothingItems: skirts),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Dresses',
+                                'assets/images/female/dresses.jpeg',
+                                WardrobePage(
+                                    clothType: 'Dress', clothingItems: dresses),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Activewear',
+                                'assets/images/female/activewear.jpeg',
+                                WardrobePage(
+                                    clothType: 'Activewear',
+                                    clothingItems: activewear),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Accessories',
+                                'assets/images/female/accessories.jpeg',
+                                WardrobePage(
+                                    clothType: 'Accessory',
+                                    clothingItems: accessories),
+                              ),
+                              _buildCategoryCard(
+                                context,
+                                'Footwear',
+                                'assets/images/female/footwear.jpeg',
+                                WardrobePage(
+                                    clothType: 'Footwear',
+                                    clothingItems: footwear),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  }
+                  return showLoading();
+                },
+              ),
             ],
           ),
         ),

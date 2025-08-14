@@ -16,6 +16,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   late final AuthenProvider authenProvider;
+
   @override
   void initState() {
     authenProvider = AuthenProvider();
@@ -25,6 +26,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _fullnameController = TextEditingController();
+
+  // Gender selection variable
+  String? _selectedGender;
+  final List<String> _genderOptions = ['Male', 'Female'];
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +102,48 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
+
+              // Gender Selection Dropdown
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: DropdownButtonFormField<String>(
+                  value: _selectedGender,
+                  hint: const Row(
+                    children: [
+                      Icon(Icons.person_outline, color: Colors.grey),
+                      SizedBox(width: 12),
+                      Text('Select Gender',
+                          style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
+                  ),
+                  items: _genderOptions.map((String gender) {
+                    return DropdownMenuItem<String>(
+                      value: gender,
+                      child: Text(gender),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedGender = newValue;
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_drop_down),
+                ),
+              ),
 
               const SizedBox(height: 20),
 
@@ -121,10 +168,17 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                         ),
                         onPressed: () async {
+                          // Validation for gender selection
+                          if (_selectedGender == null) {
+                            showSnackBar(context, "Please select your gender");
+                            return;
+                          }
+
                           final res = await authenProvider.signup(
                               _emailController.text.trim(),
                               _passwordController.text.trim(),
-                              _fullnameController.text.trim());
+                              _fullnameController.text.trim(),
+                              _selectedGender!); // Pass gender to signup method
                           if (context.mounted) {
                             if (res) {
                               moveUntil(context, const HomeScreen());
