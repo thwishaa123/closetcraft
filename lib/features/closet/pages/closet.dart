@@ -255,10 +255,10 @@ class ClosetPage extends StatelessWidget {
               flex: 3,
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                // padding: const EdgeInsets.all(20),
                 child: Image.asset(
                   icon,
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

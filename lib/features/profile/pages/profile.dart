@@ -63,8 +63,16 @@ class ProfilePage extends StatelessWidget {
                               children: [
                                 CircleAvatar(
                                   backgroundColor: Colors.indigo,
-                                  foregroundImage: NetworkImage(
-                                      provider.user!["image"].toString()),
+                                  foregroundImage: (provider.user!["image"] ==
+                                              null ||
+                                          provider.user!["image"].toString() ==
+                                              "null" ||
+                                          provider.user!["image"]
+                                              .toString()
+                                              .isEmpty)
+                                      ? null
+                                      : NetworkImage(
+                                          provider.user!["image"].toString()),
                                   radius: 45.0,
                                   child: const Icon(
                                     Icons.person,
