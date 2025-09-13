@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:closet_craft_project/features/auth/pages/login.dart';
 import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
 import 'package:closet_craft_project/features/profile/provider/profile_provider.dart';
+import 'package:closet_craft_project/features/profile/pages/my_donations_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -182,6 +183,22 @@ class ProfilePage extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
+                    // My Donations Option
+                    ListTile(
+                      leading: const Icon(Icons.volunteer_activism,
+                          color: Colors.deepPurple),
+                      title: const Text('My Donations'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyDonationsPage(),
+                          ),
+                        );
+                      },
+                    ),
+
                     // Quick Actions Section
                     // const Text(
                     //   'Quick Actions',
@@ -216,7 +233,7 @@ class ProfilePage extends StatelessWidget {
                     //   ],
                     // ),
 
-                    // const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Sign Out Button
                     SizedBox(

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
+import 'package:closet_craft_project/features/closet/pages/donation_page.dart';
 import 'package:closet_craft_project/features/profile/provider/profile_provider.dart';
 import 'package:closet_craft_project/theme/theme.dart';
 import 'package:closet_craft_project/utils/utils.dart';
@@ -55,8 +56,6 @@ class ClosetPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Categories Grid
-
-              const SizedBox(height: 32),
 
               Consumer<ProfileProvider>(
                 builder: (context, profilePro, _) {
@@ -221,6 +220,79 @@ class ClosetPage extends StatelessWidget {
                   }
                   return showLoading();
                 },
+              ),
+
+              const SizedBox(height: 20),
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DonationPage(),
+                    ),
+                  );
+                },
+                child: Card(
+                  color: Colors.deepPurple.shade50,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.volunteer_activism,
+                                color: Colors.deepPurple, size: 36),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Pass It On: Let Your Clothes Live Again',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.deepPurple.shade700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'ReVastra gives your wardrobe a second life—and keeps it out of landfills. Donate your gently used clothes to those in need or for responsible recycling.',
+                          style: TextStyle(
+                              fontSize: 15, color: Colors.deepPurple.shade900),
+                        ),
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const DonationPage(),
+                                ),
+                              );
+                            },
+                            child: const Text('Start Your Donation'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
