@@ -18,9 +18,9 @@ class DonationSuccessPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.check_circle, color: Colors.green, size: 80),
+              const Icon(Icons.check_circle, color: Colors.green, size: 80),
               const SizedBox(height: 24),
-              Text('Thank You for Your Donation!',
+              const Text('Thank You for Your Donation!',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               if (method == 'Pick at Doorstep')

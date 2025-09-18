@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileProvider extends ChangeNotifier {
-  bool _loading = false;
+  final bool _loading = false;
   bool get loading => _loading;
 
   String? _error;

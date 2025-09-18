@@ -1,10 +1,7 @@
 import 'package:closet_craft_project/features/auth/provider/auth_provider.dart';
 import 'package:closet_craft_project/features/bottom_navigation/bottom_navigation.dart';
-import 'package:closet_craft_project/features/auth/pages/login.dart';
 import 'package:closet_craft_project/utils/utils.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 //import 'login.dart';
 
 class SignUpPage extends StatefulWidget {

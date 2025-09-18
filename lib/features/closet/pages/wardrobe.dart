@@ -28,25 +28,6 @@ class WardrobePage extends StatelessWidget {
           ),
         ),
         elevation: 0,
-        actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.search),
-          //   onPressed: () {
-          //     // Implement search functionality here
-          //     showSearch(
-          //       context: context,
-          //       delegate: ClothingSearchDelegate(clothType: clothType),
-          //     );
-          //   },
-          // ),
-          // IconButton(
-          //   icon: const Icon(Icons.filter_list),
-          //   onPressed: () {
-          //     // Show filter options
-          //     _showFilterOptions(context);
-          //   },
-          // ),
-        ],
       ),
       body: Column(
         children: [

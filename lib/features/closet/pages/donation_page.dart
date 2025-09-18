@@ -164,8 +164,8 @@ class _DonationPageState extends State<DonationPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -174,14 +174,14 @@ class _DonationPageState extends State<DonationPage> {
                               children: [
                                 Icon(
                                   Icons.handshake,
-                                  color: const Color.fromARGB(255, 9, 184, 200),
+                                  color: Color.fromARGB(255, 9, 184, 200),
                                   size: 20,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      const Text(
+                                      Text(
                                         'NGO Partner: The Creative Thinkers Forum (TCTF India)',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -193,12 +193,12 @@ class _DonationPageState extends State<DonationPage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
+                            SizedBox(height: 8),
+                            Text(
                               'Basti Vikas Kendra, Opp. C160, Okhla, Phase 1, New Delhi-110020',
                               style: TextStyle(fontSize: 14),
                             ),
-                            const Text(
+                            Text(
                               'Contact: 09136173177',
                               style: TextStyle(
                                 fontSize: 14,
@@ -223,15 +223,15 @@ class _DonationPageState extends State<DonationPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            const Row(
                               children: [
                                 Icon(
                                   Icons.checklist,
-                                  color: const Color.fromARGB(255, 9, 184, 200),
+                                  color: Color.fromARGB(255, 9, 184, 200),
                                   size: 20,
                                 ),
-                                const SizedBox(width: 8),
-                                const Text(
+                                SizedBox(width: 8),
+                                Text(
                                   'Donation Guidelines',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -288,15 +288,15 @@ class _DonationPageState extends State<DonationPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
+                          const Row(
                             children: [
                               Icon(
                                 Icons.edit_note,
-                                color: const Color.fromARGB(255, 9, 184, 200),
+                                color: Color.fromARGB(255, 9, 184, 200),
                                 size: 24,
                               ),
-                              const SizedBox(width: 8),
-                              const Text(
+                              SizedBox(width: 8),
+                              Text(
                                 'Donation Details',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -409,19 +409,18 @@ class _DonationPageState extends State<DonationPage> {
                                 color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Column(
+                              child: const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       Icon(
                                         Icons.location_on,
-                                        color: const Color.fromARGB(
-                                            255, 9, 184, 200),
+                                        color: Color.fromARGB(255, 9, 184, 200),
                                         size: 20,
                                       ),
-                                      const SizedBox(width: 8),
-                                      const Text(
+                                      SizedBox(width: 8),
+                                      Text(
                                         'Drop-off Location',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -430,12 +429,12 @@ class _DonationPageState extends State<DonationPage> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 8),
-                                  const Text(
+                                  SizedBox(height: 8),
+                                  Text(
                                     'Basti Vikas Kendra, Opp. C160, Okhla, Phase 1, New Delhi-110020',
                                     style: TextStyle(fontSize: 14),
                                   ),
-                                  const Text(
+                                  Text(
                                     'Contact: 09136173177',
                                     style: TextStyle(
                                       fontSize: 14,
@@ -721,22 +720,22 @@ class _DonationPageState extends State<DonationPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           children: [
             Icon(
               Icons.photo_camera,
-              color: const Color.fromARGB(255, 9, 184, 200),
+              color: Color.fromARGB(255, 9, 184, 200),
               size: 20,
             ),
-            const SizedBox(width: 8),
-            const Text(
+            SizedBox(width: 8),
+            Text(
               'Upload Pictures of the Clothes',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
-            const Text(
+            Text(
               ' (required)',
               style: TextStyle(
                 color: Colors.red,
@@ -818,8 +817,8 @@ class _DonationPageState extends State<DonationPage> {
           const SizedBox(height: 8),
           Text(
             '${pickedImages.length} image(s) selected',
-            style: TextStyle(
-              color: const Color.fromARGB(255, 9, 184, 200),
+            style: const TextStyle(
+              color: Color.fromARGB(255, 9, 184, 200),
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
