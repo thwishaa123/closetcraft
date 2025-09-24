@@ -115,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                           if (res) {
                             moveUntil(context, const HomeScreen());
                           } else {
-                            showSnackBar(context, "Something went wrong!!");
+                            showSnackBar(context,
+                                provider.error ?? "Something went wrong!!");
                           }
                         }
                       },

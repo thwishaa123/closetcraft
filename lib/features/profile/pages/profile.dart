@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:closet_craft_project/features/auth/pages/login.dart';
+import 'package:closet_craft_project/features/auth/provider/auth_provider.dart';
 import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
 import 'package:closet_craft_project/features/profile/provider/profile_provider.dart';
 import 'package:closet_craft_project/features/profile/pages/my_donations_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:closet_craft_project/features/onboarding/onboarding_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -261,6 +260,45 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 16),
+
+                    // Delete Account Button
+                    Consumer<AuthenProvider>(
+                      builder: (context, authProvider, child) {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: authProvider.loading
+                                ? null
+                                : () => _showDeleteAccountDialog(context),
+                            icon: authProvider.loading
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.red),
+                                    ),
+                                  )
+                                : const Icon(Icons.delete_forever),
+                            label: Text(authProvider.loading
+                                ? 'Deleting Account...'
+                                : 'Delete Account'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.red,
+                              side: const BorderSide(
+                                  color: Colors.red, width: 1.5),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -353,6 +391,233 @@ class ProfilePage extends StatelessWidget {
   //     ),
   //   );
   // }
+
+  void _showDeleteAccountDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning_rounded,
+                color: Colors.red,
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Delete Account',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Are you sure you want to delete your account?',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'This action will permanently delete:',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 8),
+              _buildDeleteItem('• Your profile and personal information'),
+              _buildDeleteItem('• All your closet items and photos'),
+              _buildDeleteItem('• Your donation history'),
+              _buildDeleteItem('• All app preferences and settings'),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.red.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.red,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'This action cannot be undone!',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Consumer<AuthenProvider>(
+                builder: (context, authProvider, child) {
+                  if (authProvider.error != null) {
+                    return Container(
+                      margin: const EdgeInsets.only(top: 12),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              authProvider.error!,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                // Clear any error when dialog is dismissed
+                Provider.of<AuthenProvider>(context, listen: false)
+                    .clearError();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Consumer<AuthenProvider>(
+              builder: (context, authProvider, child) {
+                return ElevatedButton(
+                  onPressed: authProvider.loading
+                      ? null
+                      : () async {
+                          final success = await authProvider.deleteAccount();
+
+                          if (success) {
+                            // Account deleted successfully
+                            if (dialogContext.mounted) {
+                              Navigator.of(dialogContext).pop();
+                            }
+                            if (context.mounted) {
+                              // Navigate to onboarding and clear all routes
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const OnboardingPage(),
+                                ),
+                                (route) => false,
+                              );
+
+                              // Show success message
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Text(
+                                          'Account deleted successfully'),
+                                    ],
+                                  ),
+                                  backgroundColor: Colors.green,
+                                  duration: const Duration(seconds: 3),
+                                ),
+                              );
+                            }
+                          }
+                          // If deletion failed, error will be shown in the dialog
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: authProvider.loading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text(
+                          'Delete Account',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildDeleteItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 13,
+          color: Colors.grey[700],
+        ),
+      ),
+    );
+  }
 }
 
 class FavoriteStyleBottomSheet extends StatefulWidget {

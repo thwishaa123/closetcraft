@@ -20,7 +20,7 @@ class OutfitEventProvider with ChangeNotifier {
   getOutfitEvent() async {
     final res = await FirebaseFirestore.instance
         .collection('event')
-        // .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
     _allEvents = res.docs.map((event) => event.data()).toList();
     filterEvents(DateTime.now());

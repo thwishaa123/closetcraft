@@ -70,4 +70,92 @@ class AuthenProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<bool> deleteAccount() async {
+    _loading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        _error = "No user is currently signed in";
+        return false;
+      }
+
+      final uid = user.uid;
+      final batch = FirebaseFirestore.instance.batch();
+
+      // Delete user's closet items
+      final closetQuery = await FirebaseFirestore.instance
+          .collection('closet')
+          .where('uid', isEqualTo: uid)
+          .get();
+
+      for (var doc in closetQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete user's events
+      final eventQuery = await FirebaseFirestore.instance
+          .collection('event')
+          .where('uid', isEqualTo: uid)
+          .get();
+
+      for (var doc in eventQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete user's donations
+      final donationsQuery = await FirebaseFirestore.instance
+          .collection('donations')
+          .where('uid', isEqualTo: uid)
+          .get();
+
+      for (var doc in donationsQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete user's profile data
+      batch.delete(
+        FirebaseFirestore.instance.collection('users').doc(uid),
+      );
+
+      // Execute all deletions in a batch
+      await batch.commit();
+
+      // Delete the Firebase Auth account
+      await user.delete();
+
+      return true;
+    } on FirebaseAuthException catch (e) {
+      print("FirebaseAuth Error: ${e.message}");
+      if (e.code == 'requires-recent-login') {
+        _error =
+            "Please sign in again before deleting your account for security reasons.";
+      } else {
+        _error = e.message ?? "Failed to delete account";
+      }
+      notifyListeners();
+      return false;
+    } catch (e) {
+      print("Error deleting account: $e");
+      _error = "An unexpected error occurred while deleting your account";
+      notifyListeners();
+      return false;
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
+    notifyListeners();
+  }
+
+  void clearError() {
+    _error = null;
+    notifyListeners();
+  }
 }
