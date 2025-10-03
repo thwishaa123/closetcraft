@@ -28,10 +28,13 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>To pick a photo from the camera to upload the images to the cloud</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location to show local weather data.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To pick a photo from the library to upload the images to the cloud</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location to show local weather data.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to your location in order to provide accurate local weather updates.</string>
+
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

@@ -259,6 +259,7 @@ class _AddClosetState extends State<AddCloset> {
                                         context, 'Smoething went Wrong!!');
                                   }
                                   Navigator.pop(context);
+                                  Navigator.pop(context);
                                 }
                               },
                         style: ElevatedButton.styleFrom(

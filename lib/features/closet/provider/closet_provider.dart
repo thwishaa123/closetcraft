@@ -29,7 +29,7 @@ class ClosetProvider with ChangeNotifier {
         'uid': FirebaseAuth.instance.currentUser!.uid,
         'dateAdded': Timestamp.now(),
       });
-      await getAllClothFromCloset();
+      // await getAllClothFromCloset();
 
       return true;
     } catch (e) {

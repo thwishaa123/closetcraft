@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:closet_craft_project/features/calendar/provider/outfit_event_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class OutfitEventForm extends StatefulWidget {
   final Map<String, dynamic>? outfit;
@@ -72,8 +74,12 @@ class _OutfitEventFormState extends State<OutfitEventForm> {
         'createdAt': Timestamp.now(),
       });
 
+      if (mounted) {
+        await context.read<OutfitEventProvider>().getOutfitEvent();
+      }
+
       _showSnackBar('Event created successfully!');
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
     } catch (e) {
       _showSnackBar('Failed to create event. Please try again.', isError: true);
     } finally {

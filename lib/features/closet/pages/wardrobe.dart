@@ -1,20 +1,38 @@
+import 'dart:developer';
+
 import 'package:closet_craft_project/features/calendar/pages/outfit_event_form.dart';
 import 'package:closet_craft_project/features/closet/pages/add_closet.dart';
+import 'package:closet_craft_project/features/closet/provider/closet_provider.dart';
 import 'package:closet_craft_project/utils/utils.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
-class WardrobePage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class WardrobePage extends StatefulWidget {
   const WardrobePage(
       {super.key, required this.clothType, required this.clothingItems});
 
   final String clothType;
   final List<Map<String, dynamic>> clothingItems;
 
+  @override
+  State<WardrobePage> createState() => _WardrobePageState();
+}
+
+class _WardrobePageState extends State<WardrobePage> {
   // Method to get the properly formatted title
   String _getFormattedTitle() {
-    return 'Your ${clothType.substring(0, 1).toUpperCase()}${clothType.substring(1)}';
+    return 'Your ${widget.clothType.substring(0, 1).toUpperCase()}${widget.clothType.substring(1)}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (mounted) {
+        context.read<ClosetProvider>().getAllClothFromCloset();
+      }
+    });
   }
 
   @override
@@ -29,105 +47,39 @@ class WardrobePage extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          // Main content
-          Expanded(
-            child: clothingItems.isEmpty
-                ? _buildEmptyState(context)
-                : Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                      ),
-                      itemCount: clothingItems.length,
-                      itemBuilder: (context, index) {
-                        final doc = clothingItems[index];
+      body: Consumer<ClosetProvider>(builder: (context, closetPro, _) {
+        var clothingItems = closetPro.closetData
+            .where((map) => map["cloth"] == widget.clothType)
+            .toList();
+        log(clothingItems.length.toString());
 
-                        return _buildClothingItem(context, doc);
-                      },
+        if (!closetPro.loading) {
+          return clothingItems.isEmpty
+              ? _buildEmptyState(context)
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.75,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
                     ),
-                  ),
-            // child: FutureBuilder<QuerySnapshot>(
-            //   future: FirebaseFirestore.instance
-            //       .collection('closet')
-            //       .where('uid',
-            //           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            //       .where('cloth', isEqualTo: clothType)
-            //       .get(),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return const Center(
-            //         child: CircularProgressIndicator(),
-            //       );
-            //     }
-            //     if (snapshot.hasError) {
-            //       return Center(
-            //         child: Column(
-            //           mainAxisSize: MainAxisSize.min,
-            //           children: [
-            //             Icon(Icons.error_outline,
-            //                 size: 48, color: Colors.red[300]),
-            //             const SizedBox(height: 16),
-            //             Text(
-            //               'Something went wrong',
-            //               style:
-            //                   TextStyle(fontSize: 16, color: Colors.grey[700]),
-            //             ),
-            //             const SizedBox(height: 8),
-            //             ElevatedButton(
-            //               onPressed: () {
-            //                 // Refresh the page
-            //                 Navigator.pushReplacement(
-            //                   context,
-            //                   MaterialPageRoute(
-            //                     builder: (context) => WardrobePage(
-            //                         clothType: clothType,
-            //                         clothingItems: clothingItems),
-            //                   ),
-            //                 );
-            //               },
-            //               style: ElevatedButton.styleFrom(
-            //                 backgroundColor: Colors.indigo,
-            //               ),
-            //               child: const Text('Retry'),
-            //             ),
-            //           ],
-            //         ),
-            //       );
-            //     }
-            //     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            //       return _buildEmptyState(context);
-            //     }
-            //     // Display items in a grid
-            //     return Padding(
-            //       padding: const EdgeInsets.all(16.0),
-            //       child: GridView.builder(
-            //         gridDelegate:
-            //             const SliverGridDelegateWithFixedCrossAxisCount(
-            //           crossAxisCount: 2,
-            //           childAspectRatio: 0.75,
-            //           crossAxisSpacing: 16,
-            //           mainAxisSpacing: 16,
-            //         ),
-            //         itemCount: snapshot.data!.docs.length,
-            //         itemBuilder: (context, index) {
-            //           final doc = snapshot.data!.docs[index];
+                    itemCount: clothingItems.length,
+                    itemBuilder: (context, index) {
+                      final doc = clothingItems[index];
 
-            //           return _buildClothingItem(context, doc);
-            //         },
-            //       ),
-            //     );
-            //   },
-            // ),
-          ),
-        ],
-      ),
+                      return _buildClothingItem(context, doc);
+                    },
+                  ),
+                );
+        }
+
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }),
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'Wardrobe',
         onPressed: () async {
@@ -137,7 +89,7 @@ class WardrobePage extends StatelessWidget {
           );
         },
         label: Text(
-          'Add ${clothType.substring(0, 1).toUpperCase()}${clothType.substring(1)}',
+          'Add ${widget.clothType.substring(0, 1).toUpperCase()}${widget.clothType.substring(1)}',
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
@@ -152,26 +104,6 @@ class WardrobePage extends StatelessWidget {
   }
 
   // // Filter chip widget
-  // Widget _buildFilterChip(String label, bool isSelected) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(right: 8.0),
-  //     child: FilterChip(
-  //       label: Text(label),
-  //       selected: isSelected,
-  //       onSelected: (bool selected) {
-  //         // Handle selection
-  //       },
-  //       selectedColor: Colors.indigo.withOpacity(0.2),
-  //       checkmarkColor: Colors.indigo,
-  //       labelStyle: TextStyle(
-  //         color: isSelected ? Colors.indigo : Colors.black87,
-  //         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Clothing item card
   Widget _buildClothingItem(BuildContext context, Map<String, dynamic> data) {
     // Extract data from document
     // Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -327,7 +259,7 @@ class WardrobePage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'No ${clothType.toLowerCase()} found',
+            'No ${widget.clothType.toLowerCase()} found',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -336,7 +268,7 @@ class WardrobePage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Add your first ${clothType.toLowerCase()} to get started',
+            'Add your first ${widget.clothType.toLowerCase()} to get started',
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600],
@@ -349,7 +281,7 @@ class WardrobePage extends StatelessWidget {
 
   // Helper method to get icon based on cloth type
   IconData _getIconForClothType() {
-    switch (clothType.toLowerCase()) {
+    switch (widget.clothType.toLowerCase()) {
       case 'shirts':
         return Icons.checkroom;
       case 'pants':
@@ -395,134 +327,6 @@ class WardrobePage extends StatelessWidget {
   }
 
   // Show filter options
-  // void _showFilterOptions(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //     ),
-  //     builder: (context) {
-  //       return Padding(
-  //         padding: const EdgeInsets.all(20.0),
-  //         child: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             const Text(
-  //               'Filter Options',
-  //               style: TextStyle(
-  //                 fontSize: 20,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //             const SizedBox(height: 16),
-  //             // Filter sections
-  //             const Text(
-  //               'Sort By',
-  //               style: TextStyle(
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //             const SizedBox(height: 8),
-  //             Wrap(
-  //               spacing: 8,
-  //               children: [
-  //                 _buildFilterChip('Newest', true),
-  //                 _buildFilterChip('Oldest', false),
-  //                 _buildFilterChip('Type', false),
-  //                 _buildFilterChip('Color', false),
-  //               ],
-  //             ),
-  //             const SizedBox(height: 16),
-  //             const Text(
-  //               'Color',
-  //               style: TextStyle(
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //             const SizedBox(height: 8),
-  //             Wrap(
-  //               spacing: 8,
-  //               children: [
-  //                 _buildFilterChip('All', true),
-  //                 _buildFilterChip('Red', false),
-  //                 _buildFilterChip('Blue', false),
-  //                 _buildFilterChip('Green', false),
-  //                 _buildFilterChip('Black', false),
-  //                 _buildFilterChip('White', false),
-  //               ],
-  //             ),
-  //             const SizedBox(height: 16),
-  //             const Text(
-  //               'Season',
-  //               style: TextStyle(
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //             const SizedBox(height: 8),
-  //             Wrap(
-  //               spacing: 8,
-  //               children: [
-  //                 _buildFilterChip('All', true),
-  //                 _buildFilterChip('Spring', false),
-  //                 _buildFilterChip('Summer', false),
-  //                 _buildFilterChip('Fall', false),
-  //                 _buildFilterChip('Winter', false),
-  //               ],
-  //             ),
-  //             const SizedBox(height: 16),
-  //             const Text(
-  //               'Fabric',
-  //               style: TextStyle(
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //             const SizedBox(height: 8),
-  //             Wrap(
-  //               spacing: 8,
-  //               children: [
-  //                 _buildFilterChip('All', true),
-  //                 _buildFilterChip('Cotton', false),
-  //                 _buildFilterChip('Wool', false),
-  //                 _buildFilterChip('Silk', false),
-  //                 _buildFilterChip('Linen', false),
-  //                 _buildFilterChip('Polyester', false),
-  //               ],
-  //             ),
-  //             const SizedBox(height: 24),
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.end,
-  //               children: [
-  //                 TextButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                   },
-  //                   child: const Text('Reset'),
-  //                 ),
-  //                 const SizedBox(width: 16),
-  //                 ElevatedButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                   },
-  //                   style: ElevatedButton.styleFrom(
-  //                     backgroundColor: Colors.indigo,
-  //                   ),
-  //                   child: const Text('Apply'),
-  //                 ),
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Show item details
   void _showItemDetails(BuildContext context, Map<String, dynamic> data) {
     // Extract data from document
     // Map<String, dynamic> data = doc.data() as Map<String, dynamic>;

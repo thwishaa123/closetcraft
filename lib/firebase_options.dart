@@ -66,11 +66,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCnfyXyT6YyqjUbAouPvYMS3ObUwTrzYv8',
-    appId: '1:719799195731:ios:c698507e4727793f780ea6',
+    appId: '1:719799195731:ios:76e57638a363df32780ea6',
     messagingSenderId: '719799195731',
     projectId: 'closetcraft-34c9f',
     storageBucket: 'closetcraft-34c9f.firebasestorage.app',
-    iosBundleId: 'com.revastra.app',
+    iosBundleId: 'com.revastra.ios',
   );
 
 }
