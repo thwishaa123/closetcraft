@@ -1,6 +1,7 @@
 import 'package:closet_craft_project/data/repo/cloudinary_repo.dart';
 import 'package:closet_craft_project/features/closet/pages/donation_success_page.dart';
 import 'package:closet_craft_project/utils/platform_image.dart';
+import 'package:closet_craft_project/utils/responsive_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,14 +35,24 @@ class _DonationPageState extends State<DonationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+    final isTabletOrLarger = context.isTabletOrLarger;
+
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: const Text('Donate Clothes'),
+        title: Text(
+          'Donate Clothes',
+          style: context.responsiveTextStyle(
+            fontSize: isIPhoneProMax ? 22 : 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: const Color.fromARGB(255, 9, 184, 200),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
+        toolbarHeight: context.responsiveAppBarHeight,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -60,31 +71,33 @@ class _DonationPageState extends State<DonationPage> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: context.responsiveCardPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.favorite,
                       color: Colors.white,
-                      size: 32,
+                      size: context.responsiveIconSize(32),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: context.responsiveSpacing(12)),
                     Text(
                       'Pass It On: Let Your Clothes Live Again',
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                      style: context.responsiveTextStyle(
+                        fontSize:
+                            isIPhoneProMax ? 26 : (isTabletOrLarger ? 24 : 22),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: context.responsiveSpacing(8)),
                     Text(
                       'ReVastra gives your wardrobe a second life—and keeps it out of landfills.',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(color: Colors.white70),
+                      style: context.responsiveTextStyle(
+                        fontSize:
+                            isIPhoneProMax ? 18 : (isTabletOrLarger ? 17 : 16),
+                        color: Colors.white70,
+                      ),
                     ),
                   ],
                 ),
@@ -93,7 +106,7 @@ class _DonationPageState extends State<DonationPage> {
 
             // Main Content
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: context.responsivePadding,
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -103,11 +116,13 @@ class _DonationPageState extends State<DonationPage> {
                     Card(
                       elevation: 4,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(
+                            context.responsiveSpacing(16)),
                       ),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(
+                              context.responsiveSpacing(16)),
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -119,8 +134,8 @@ class _DonationPageState extends State<DonationPage> {
                             ],
                           ),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(20.0),
+                        child: Padding(
+                          padding: context.responsiveCardPadding,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -128,25 +143,31 @@ class _DonationPageState extends State<DonationPage> {
                                 children: [
                                   Icon(
                                     Icons.lightbulb_outline,
-                                    color: Color.fromARGB(255, 9, 184, 200),
-                                    size: 24,
+                                    color:
+                                        const Color.fromARGB(255, 9, 184, 200),
+                                    size: context.responsiveIconSize(24),
                                   ),
-                                  SizedBox(width: 8),
+                                  SizedBox(width: context.responsiveSpacing(8)),
                                   Text(
                                     'Did You Know?',
-                                    style: TextStyle(
+                                    style: context.responsiveTextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Color.fromARGB(255, 9, 184, 200),
+                                      fontSize: isIPhoneProMax
+                                          ? 20
+                                          : (isTabletOrLarger ? 18 : 16),
+                                      color: const Color.fromARGB(
+                                          255, 9, 184, 200),
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 12),
+                              SizedBox(height: context.responsiveSpacing(12)),
                               Text(
                                 'Every year, the world throws away ~92 million tonnes of textile waste—about one garbage truck every second. Re-Vastra is your easy, one-stop platform to change that: list your clothes, choose pickup or drop-off, and ensure they\'re reused or responsibly recycled.',
-                                style: TextStyle(
-                                  fontSize: 14,
+                                style: context.responsiveTextStyle(
+                                  fontSize: isIPhoneProMax
+                                      ? 16
+                                      : (isTabletOrLarger ? 15 : 14),
                                   height: 1.5,
                                 ),
                               ),
@@ -156,7 +177,7 @@ class _DonationPageState extends State<DonationPage> {
                       ),
                     ),
 
-                    const SizedBox(height: 24),
+                    SizedBox(height: context.responsiveSpacing(24)),
 
                     // NGO Partner Info
                     Card(
@@ -528,7 +549,7 @@ class _DonationPageState extends State<DonationPage> {
                           const SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,
-                            height: 56,
+                            height: context.responsiveButtonHeight,
                             child: ElevatedButton(
                               onPressed: isSubmitting ? null : _submitDonation,
                               style: ElevatedButton.styleFrom(
@@ -536,18 +557,20 @@ class _DonationPageState extends State<DonationPage> {
                                     const Color.fromARGB(255, 9, 184, 200),
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(
+                                      context.responsiveSpacing(12)),
                                 ),
                                 elevation: 2,
                               ),
                               child: isSubmitting
-                                  ? const Row(
+                                  ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         SizedBox(
-                                          width: 20,
-                                          height: 20,
+                                          width: context.responsiveIconSize(20),
+                                          height:
+                                              context.responsiveIconSize(20),
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
                                             valueColor:
@@ -555,20 +578,36 @@ class _DonationPageState extends State<DonationPage> {
                                                     Colors.white),
                                           ),
                                         ),
-                                        SizedBox(width: 12),
-                                        Text('Submitting...'),
+                                        SizedBox(
+                                            width:
+                                                context.responsiveSpacing(12)),
+                                        Text(
+                                          'Submitting...',
+                                          style: context.responsiveTextStyle(
+                                            fontSize: context.isIPhoneProMax
+                                                ? 18
+                                                : 16,
+                                          ),
+                                        ),
                                       ],
                                     )
-                                  : const Row(
+                                  : Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(Icons.send, size: 20),
-                                        SizedBox(width: 8),
+                                        Icon(
+                                          Icons.send,
+                                          size: context.responsiveIconSize(20),
+                                        ),
+                                        SizedBox(
+                                            width:
+                                                context.responsiveSpacing(8)),
                                         Text(
                                           'Submit Donation',
-                                          style: TextStyle(
-                                            fontSize: 16,
+                                          style: context.responsiveTextStyle(
+                                            fontSize: context.isIPhoneProMax
+                                                ? 18
+                                                : 16,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -626,21 +665,27 @@ class _DonationPageState extends State<DonationPage> {
     TextInputType? keyboardType,
     required IconData icon,
   }) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+
     return TextFormField(
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: Icon(icon, color: const Color.fromARGB(255, 9, 184, 200)),
+        prefixIcon: Icon(
+          icon,
+          color: const Color.fromARGB(255, 9, 184, 200),
+          size: context.responsiveIconSize(20),
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(context.responsiveSpacing(12)),
           borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(context.responsiveSpacing(12)),
           borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(context.responsiveSpacing(12)),
           borderSide: const BorderSide(
             color: Color.fromARGB(255, 9, 184, 200),
             width: 2,
@@ -648,12 +693,23 @@ class _DonationPageState extends State<DonationPage> {
         ),
         filled: true,
         fillColor: Colors.grey.shade50,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: context.responsiveSpacing(16),
+          vertical: context.responsiveSpacing(16),
+        ),
+        labelStyle: context.responsiveTextStyle(
+          fontSize: isIPhoneProMax ? 16 : 14,
+        ),
+        hintStyle: context.responsiveTextStyle(
+          fontSize: isIPhoneProMax ? 16 : 14,
+        ),
       ),
       keyboardType: keyboardType,
       onChanged: onChanged,
       validator: validator,
+      style: context.responsiveTextStyle(
+        fontSize: isIPhoneProMax ? 16 : 14,
+      ),
     );
   }
 
@@ -664,15 +720,17 @@ class _DonationPageState extends State<DonationPage> {
     bool isSelected,
     VoidCallback onTap,
   ) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: context.responsiveCardPadding,
         decoration: BoxDecoration(
           color: isSelected
               ? const Color.fromARGB(255, 9, 184, 200).withOpacity(0.1)
               : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(context.responsiveSpacing(12)),
           border: Border.all(
             color: isSelected
                 ? const Color.fromARGB(255, 9, 184, 200)
@@ -687,23 +745,24 @@ class _DonationPageState extends State<DonationPage> {
               color: isSelected
                   ? const Color.fromARGB(255, 9, 184, 200)
                   : Colors.grey.shade600,
-              size: 32,
+              size: context.responsiveIconSize(32),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: context.responsiveSpacing(8)),
             Text(
               title,
-              style: TextStyle(
+              style: context.responsiveTextStyle(
                 fontWeight: FontWeight.bold,
+                fontSize: isIPhoneProMax ? 16 : 14,
                 color: isSelected
                     ? const Color.fromARGB(255, 9, 184, 200)
                     : Colors.grey.shade700,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: context.responsiveSpacing(4)),
             Text(
               subtitle,
-              style: TextStyle(
-                fontSize: 12,
+              style: context.responsiveTextStyle(
+                fontSize: isIPhoneProMax ? 13 : 12,
                 color: isSelected
                     ? const Color.fromARGB(255, 9, 184, 200)
                     : Colors.grey.shade600,
@@ -727,19 +786,18 @@ class _DonationPageState extends State<DonationPage> {
               color: Color.fromARGB(255, 9, 184, 200),
               size: 20,
             ),
-            SizedBox(width: 8),
-            Text(
-              'Upload Pictures of the Clothes',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            Text(
-              ' (required)',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
+            SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    'Upload Pictures of the Clothes (required)',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

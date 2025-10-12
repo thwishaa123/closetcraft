@@ -1,6 +1,7 @@
 import 'package:closet_craft_project/features/auth/provider/auth_provider.dart';
 import 'package:closet_craft_project/features/bottom_navigation/bottom_navigation.dart';
 import 'package:closet_craft_project/utils/utils.dart';
+import 'package:closet_craft_project/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 //import 'login.dart';
 
@@ -30,27 +31,33 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+    final isTabletOrLarger = context.isTabletOrLarger;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: context.responsivePadding,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Create Account',
-                style: TextStyle(
-                  fontSize: 32,
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 36 : (isTabletOrLarger ? 34 : 32),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: context.responsiveSpacing(8)),
+              Text(
                 'Sign up to get started!',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 18 : (isTabletOrLarger ? 17 : 16),
+                  color: Colors.grey,
+                ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: context.responsiveSpacing(40)),
 
               // Full Name
               TextField(
@@ -59,14 +66,28 @@ class _SignUpPageState extends State<SignUpPage> {
                   hintText: 'Full Name',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  prefixIcon: const Icon(Icons.person_outline),
+                  prefixIcon: Icon(
+                    Icons.person_outline,
+                    size: context.responsiveIconSize(20),
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                        BorderRadius.circular(context.responsiveSpacing(12)),
                     borderSide: BorderSide.none,
                   ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: context.responsiveSpacing(16),
+                    vertical: context.responsiveSpacing(16),
+                  ),
+                  hintStyle: context.responsiveTextStyle(
+                    fontSize: isIPhoneProMax ? 16 : 14,
+                  ),
+                ),
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 16 : 14,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Email
               TextField(
@@ -75,14 +96,28 @@ class _SignUpPageState extends State<SignUpPage> {
                   hintText: 'Email',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  prefixIcon: const Icon(Icons.email_outlined),
+                  prefixIcon: Icon(
+                    Icons.email_outlined,
+                    size: context.responsiveIconSize(20),
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                        BorderRadius.circular(context.responsiveSpacing(12)),
                     borderSide: BorderSide.none,
                   ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: context.responsiveSpacing(16),
+                    vertical: context.responsiveSpacing(16),
+                  ),
+                  hintStyle: context.responsiveTextStyle(
+                    fontSize: isIPhoneProMax ? 16 : 14,
+                  ),
+                ),
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 16 : 14,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Password
               TextField(
@@ -92,45 +127,77 @@ class _SignUpPageState extends State<SignUpPage> {
                   hintText: 'Password',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  prefixIcon: const Icon(Icons.lock_outline),
+                  prefixIcon: Icon(
+                    Icons.lock_outline,
+                    size: context.responsiveIconSize(20),
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                        BorderRadius.circular(context.responsiveSpacing(12)),
                     borderSide: BorderSide.none,
                   ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: context.responsiveSpacing(16),
+                    vertical: context.responsiveSpacing(16),
+                  ),
+                  hintStyle: context.responsiveTextStyle(
+                    fontSize: isIPhoneProMax ? 16 : 14,
+                  ),
+                ),
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 16 : 14,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Gender Selection Dropdown
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(context.responsiveSpacing(12)),
                 ),
                 child: DropdownButtonFormField<String>(
                   value: _selectedGender,
-                  hint: const Row(
+                  hint: Row(
                     children: [
-                      Icon(Icons.person_outline, color: Colors.grey),
-                      SizedBox(width: 12),
-                      Text('Select Gender',
-                          style: TextStyle(color: Colors.grey)),
+                      Icon(
+                        Icons.person_outline,
+                        color: Colors.grey,
+                        size: context.responsiveIconSize(20),
+                      ),
+                      SizedBox(width: context.responsiveSpacing(12)),
+                      Text(
+                        'Select Gender',
+                        style: context.responsiveTextStyle(
+                          color: Colors.grey,
+                          fontSize: isIPhoneProMax ? 16 : 14,
+                        ),
+                      ),
                     ],
                   ),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[100],
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius:
+                          BorderRadius.circular(context.responsiveSpacing(12)),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 16),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: context.responsiveSpacing(16),
+                      vertical: context.responsiveSpacing(16),
+                    ),
                   ),
                   items: _genderOptions.map((String gender) {
                     return DropdownMenuItem<String>(
                       value: gender,
-                      child: Text(gender),
+                      child: Text(
+                        gender,
+                        style: context.responsiveTextStyle(
+                          fontSize: isIPhoneProMax ? 16 : 14,
+                        ),
+                      ),
                     );
                   }).toList(),
                   onChanged: (String? newValue) {
@@ -138,30 +205,36 @@ class _SignUpPageState extends State<SignUpPage> {
                       _selectedGender = newValue;
                     });
                   },
-                  icon: const Icon(Icons.arrow_drop_down),
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    size: context.responsiveIconSize(20),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Sign Up button
               ListenableBuilder(
                   listenable: authenProvider,
                   builder: (context, _) {
                     if (authenProvider.loading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
                       );
                     }
                     return SizedBox(
                       width: double.infinity,
+                      height: context.responsiveButtonHeight,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: Colors.deepPurple,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(
+                                context.responsiveSpacing(12)),
                           ),
                         ),
                         onPressed: () async {
@@ -184,24 +257,38 @@ class _SignUpPageState extends State<SignUpPage> {
                             }
                           }
                         },
-                        child: const Text(
+                        child: Text(
                           'Sign Up',
-                          style: TextStyle(fontSize: 16),
+                          style: context.responsiveTextStyle(
+                            fontSize: isIPhoneProMax ? 18 : 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     );
                   }),
 
-              const SizedBox(height: 30),
+              SizedBox(height: context.responsiveSpacing(30)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already have an account?"),
+                  Text(
+                    "Already have an account?",
+                    style: context.responsiveTextStyle(
+                      fontSize: isIPhoneProMax ? 16 : 14,
+                    ),
+                  ),
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Text('Login'),
+                    child: Text(
+                      'Login',
+                      style: context.responsiveTextStyle(
+                        fontSize: isIPhoneProMax ? 16 : 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ],
               )

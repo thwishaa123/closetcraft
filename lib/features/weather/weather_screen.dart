@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:closet_craft_project/features/weather/suggest_outfit_widget.dart';
+import 'package:closet_craft_project/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -100,29 +101,43 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+    final isTabletOrLarger = context.isTabletOrLarger;
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Weather Outfit"),
+        title: Text(
+          "Weather Outfit",
+          style: context.responsiveTextStyle(
+            fontSize: isIPhoneProMax ? 22 : 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        toolbarHeight: context.responsiveAppBarHeight,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: Icon(
+              Icons.refresh,
+              size: context.responsiveIconSize(24),
+            ),
             onPressed: fetchWeather,
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: context.responsivePadding,
           child: Column(
             children: [
               // Weather overview card
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: context.responsiveCardPadding,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius:
+                      BorderRadius.circular(context.responsiveSpacing(16)),
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
@@ -136,34 +151,38 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   children: [
                     Icon(
                       weatherIcons[weatherCondition] ?? Icons.cloud,
-                      size: 32,
+                      size: context.responsiveIconSize(32),
                       color: Colors.indigo,
                     ),
-                    // Text(
-                    //   weatherCondition,
-                    //   style: const TextStyle(
-                    //     fontSize: 20,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
                     Text(
                       "$temperature°C",
-                      style: const TextStyle(
-                        fontSize: 20,
+                      style: context.responsiveTextStyle(
+                        fontSize:
+                            isIPhoneProMax ? 22 : (isTabletOrLarger ? 20 : 18),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Row(
                       children: [
-                        const Icon(Icons.location_on, color: Colors.indigo),
-                        Text(locationName),
+                        Icon(
+                          Icons.location_on,
+                          color: Colors.indigo,
+                          size: context.responsiveIconSize(20),
+                        ),
+                        SizedBox(width: context.responsiveSpacing(4)),
+                        Text(
+                          locationName,
+                          style: context.responsiveTextStyle(
+                            fontSize: isIPhoneProMax ? 16 : 14,
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Weather details
               WeatherInfoRow(
@@ -181,15 +200,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
               WeatherInfoRow(
                   icon: Icons.air, label: "Wind", value: "$windSpeed km/h"),
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Outfit suggestion
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: context.responsiveCardPadding,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius:
+                      BorderRadius.circular(context.responsiveSpacing(16)),
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
@@ -200,11 +220,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 ),
                 child: Text(
                   _getOutfitSuggestion(),
-                  style: const TextStyle(fontSize: 16),
+                  style: context.responsiveTextStyle(
+                    fontSize:
+                        isIPhoneProMax ? 18 : (isTabletOrLarger ? 17 : 16),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               FashionCard(
                 weatherData: weatherData,
@@ -231,17 +254,31 @@ class WeatherInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: context.responsiveSpacing(8)),
       child: Row(
         children: [
-          Icon(icon, color: Colors.indigo, size: 20),
-          const SizedBox(width: 12),
-          Text(label),
+          Icon(
+            icon,
+            color: Colors.indigo,
+            size: context.responsiveIconSize(20),
+          ),
+          SizedBox(width: context.responsiveSpacing(12)),
+          Text(
+            label,
+            style: context.responsiveTextStyle(
+              fontSize: isIPhoneProMax ? 16 : 14,
+            ),
+          ),
           const Spacer(),
           Text(
             value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: context.responsiveTextStyle(
+              fontSize: isIPhoneProMax ? 16 : 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

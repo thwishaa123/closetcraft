@@ -5,6 +5,7 @@ import 'package:closet_craft_project/features/closet/pages/donation_page.dart';
 import 'package:closet_craft_project/features/closet/pages/instruction_page.dart';
 import 'package:closet_craft_project/features/profile/provider/profile_provider.dart';
 import 'package:closet_craft_project/utils/utils.dart';
+import 'package:closet_craft_project/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'wardrobe.dart';
@@ -21,16 +22,20 @@ class ClosetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+    final isTabletOrLarger = context.isTabletOrLarger;
+
     return Scaffold(
       backgroundColor: lightestTeal,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        toolbarHeight: context.responsiveAppBarHeight,
         title: Text(
           'Your Closet',
-          style: TextStyle(
+          style: context.responsiveTextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 24,
+            fontSize: isIPhoneProMax ? 26 : (isTabletOrLarger ? 24 : 22),
             color: darkTeal,
           ),
         ),
@@ -48,7 +53,7 @@ class ClosetPage extends StatelessWidget {
             icon: Icon(
               Icons.help_outline,
               color: darkTeal,
-              size: 28,
+              size: context.responsiveIconSize(28),
             ),
             tooltip: 'How to Use Re-Vastra',
           ),
@@ -56,21 +61,21 @@ class ClosetPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+          padding: context.responsivePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Categories Section
               Text(
                 'Categories',
-                style: TextStyle(
-                  fontSize: 20,
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 22 : (isTabletOrLarger ? 20 : 18),
                   fontWeight: FontWeight.w600,
                   color: darkTeal,
                   letterSpacing: 0.5,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Categories Grid
 
@@ -96,10 +101,12 @@ class ClosetPage extends StatelessWidget {
                           return GridView.count(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.85,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
+                            crossAxisCount:
+                                context.responsiveGridCrossAxisCount,
+                            childAspectRatio:
+                                context.responsiveChildAspectRatio,
+                            mainAxisSpacing: context.responsiveSpacing(16),
+                            crossAxisSpacing: context.responsiveSpacing(16),
                             children: [
                               _buildCategoryCard(
                                 context,
@@ -165,10 +172,12 @@ class ClosetPage extends StatelessWidget {
                           return GridView.count(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.85,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
+                            crossAxisCount:
+                                context.responsiveGridCrossAxisCount,
+                            childAspectRatio:
+                                context.responsiveChildAspectRatio,
+                            mainAxisSpacing: context.responsiveSpacing(16),
+                            crossAxisSpacing: context.responsiveSpacing(16),
                             children: [
                               _buildCategoryCard(
                                 context,
@@ -239,7 +248,7 @@ class ClosetPage extends StatelessWidget {
                 },
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               GestureDetector(
                 onTap: () {
@@ -254,37 +263,47 @@ class ClosetPage extends StatelessWidget {
                   color: Colors.deepPurple.shade50,
                   elevation: 4,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius:
+                        BorderRadius.circular(context.responsiveSpacing(18)),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: context.responsiveCardPadding,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.volunteer_activism,
-                                color: Colors.deepPurple, size: 36),
-                            const SizedBox(width: 12),
+                            Icon(
+                              Icons.volunteer_activism,
+                              color: Colors.deepPurple,
+                              size: context.responsiveIconSize(36),
+                            ),
+                            SizedBox(width: context.responsiveSpacing(12)),
                             Expanded(
                               child: Text(
                                 'Pass It On: Let Your Clothes Live Again',
-                                style: TextStyle(
+                                style: context.responsiveTextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: isIPhoneProMax
+                                      ? 20
+                                      : (isTabletOrLarger ? 18 : 16),
                                   color: Colors.deepPurple.shade700,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: context.responsiveSpacing(10)),
                         Text(
                           'ReVastra gives your wardrobe a second life—and keeps it out of landfills. Donate your gently used clothes to those in need or for responsible recycling.',
-                          style: TextStyle(
-                              fontSize: 15, color: Colors.deepPurple.shade900),
+                          style: context.responsiveTextStyle(
+                            fontSize: isIPhoneProMax
+                                ? 17
+                                : (isTabletOrLarger ? 16 : 15),
+                            color: Colors.deepPurple.shade900,
+                          ),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: context.responsiveSpacing(10)),
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
@@ -292,7 +311,8 @@ class ClosetPage extends StatelessWidget {
                               backgroundColor: Colors.deepPurple,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(
+                                    context.responsiveSpacing(10)),
                               ),
                             ),
                             onPressed: () {
@@ -303,7 +323,13 @@ class ClosetPage extends StatelessWidget {
                                 ),
                               );
                             },
-                            child: const Text('Start Your Donation'),
+                            child: Text(
+                              'Start Your Donation',
+                              style: context.responsiveTextStyle(
+                                fontSize: isIPhoneProMax ? 16 : 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -320,6 +346,9 @@ class ClosetPage extends StatelessWidget {
 
   Widget _buildCategoryCard(
       BuildContext context, String title, String icon, Widget page) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+    final isTabletOrLarger = context.isTabletOrLarger;
+
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -328,11 +357,11 @@ class ClosetPage extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(context.responsiveSpacing(16)),
           boxShadow: [
             BoxShadow(
               color: darkTeal.withOpacity(0.08),
-              blurRadius: 8,
+              blurRadius: context.responsiveSpacing(8),
               offset: const Offset(0, 4),
             ),
           ],
@@ -344,7 +373,6 @@ class ClosetPage extends StatelessWidget {
               flex: 3,
               child: Container(
                 width: double.infinity,
-                // padding: const EdgeInsets.all(20),
                 child: Image.asset(
                   icon,
                   fit: BoxFit.cover,
@@ -355,21 +383,23 @@ class ClosetPage extends StatelessWidget {
             // Title Container
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(
+                vertical: context.responsiveSpacing(12),
+              ),
               decoration: BoxDecoration(
                 color: mediumTeal,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(context.responsiveSpacing(16)),
+                  bottomRight: Radius.circular(context.responsiveSpacing(16)),
                 ),
               ),
               child: Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: context.responsiveTextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
-                  fontSize: 15,
+                  fontSize: isIPhoneProMax ? 17 : (isTabletOrLarger ? 16 : 15),
                   letterSpacing: 0.3,
                 ),
               ),

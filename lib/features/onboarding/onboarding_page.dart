@@ -1,8 +1,8 @@
 import 'package:closet_craft_project/features/auth/pages/login.dart';
 import 'package:closet_craft_project/features/auth/pages/signup.dart';
 import 'package:closet_craft_project/utils/utils.dart';
+import 'package:closet_craft_project/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -14,9 +14,10 @@ class OnboardingPage extends StatelessWidget {
         builder: (context, constraints) {
           final screenHeight = constraints.maxHeight;
           final screenWidth = constraints.maxWidth;
-          final screenType = _getScreenType(screenWidth, screenHeight);
+          final screenType = ResponsiveUtils.getScreenType(context);
           final isDesktop = screenType == ScreenType.desktop;
           final isTablet = screenType == ScreenType.tablet;
+          final isIPhoneProMax = screenType == ScreenType.iPhoneProMax;
 
           return Stack(
             children: [
@@ -56,27 +57,14 @@ class OnboardingPage extends StatelessWidget {
               SafeArea(
                 child: isDesktop
                     ? _buildDesktopLayout(context, screenWidth, screenHeight)
-                    : _buildMobileTabletLayout(
-                        context, screenWidth, screenHeight, isTablet),
+                    : _buildMobileTabletLayout(context, screenWidth,
+                        screenHeight, isTablet, isIPhoneProMax),
               ),
             ],
           );
         },
       ),
     );
-  }
-
-  ScreenType _getScreenType(double width, double height) {
-    if (kIsWeb) {
-      if (width >= 1200) return ScreenType.desktop;
-      if (width >= 768) return ScreenType.tablet;
-      return ScreenType.mobile;
-    }
-
-    // For mobile platforms, use height as primary indicator
-    if (height >= 900) return ScreenType.desktop;
-    if (height >= 700) return ScreenType.tablet;
-    return ScreenType.mobile;
   }
 
   Widget _buildDesktopLayout(
@@ -257,12 +245,9 @@ class OnboardingPage extends StatelessWidget {
   }
 
   Widget _buildMobileTabletLayout(BuildContext context, double screenWidth,
-      double screenHeight, bool isTablet) {
+      double screenHeight, bool isTablet, bool isIPhoneProMax) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? screenWidth * 0.08 : screenWidth * 0.06,
-        vertical: isTablet ? 32.0 : 24.0,
-      ),
+      padding: context.responsivePadding,
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: screenHeight -
@@ -272,100 +257,107 @@ class OnboardingPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: isTablet ? 60 : 40),
+            SizedBox(
+                height: context.responsiveSpacing(isIPhoneProMax ? 50 : 40)),
 
             // Logo
             SizedBox(
-              width: isTablet ? 120 : 100,
-              height: isTablet ? 120 : 100,
+              width: context.responsiveIconSize(isIPhoneProMax ? 130 : 100),
+              height: context.responsiveIconSize(isIPhoneProMax ? 130 : 100),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(isTablet ? 24 : 20),
+                borderRadius:
+                    BorderRadius.circular(context.responsiveSpacing(20)),
                 child: Image.asset("assets/images/revastra_logo.jpg"),
               ),
             ),
-            SizedBox(height: isTablet ? 40 : 30),
+            SizedBox(height: context.responsiveSpacing(30)),
 
             // App title
             Text(
               'ReVastra',
-              style: TextStyle(
-                fontSize: isTablet ? 36 : 32,
+              style: context.responsiveTextStyle(
+                fontSize: isIPhoneProMax ? 38 : (isTablet ? 36 : 32),
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 letterSpacing: 1.2,
               ),
             ),
 
-            SizedBox(height: isTablet ? 16 : 12),
+            SizedBox(height: context.responsiveSpacing(12)),
 
             // Subtitle
             Text(
               'Your Smart Wardrobe Companion',
-              style: TextStyle(
-                fontSize: isTablet ? 18 : 16,
+              style: context.responsiveTextStyle(
+                fontSize: isIPhoneProMax ? 20 : (isTablet ? 18 : 16),
                 color: Colors.white70,
                 fontWeight: FontWeight.w300,
               ),
               textAlign: TextAlign.center,
             ),
 
-            SizedBox(height: isTablet ? 60 : 40),
+            SizedBox(
+                height: context.responsiveSpacing(isIPhoneProMax ? 50 : 40)),
 
             // Feature cards
             Container(
               width: double.infinity,
-              constraints: BoxConstraints(
-                maxWidth: isTablet ? 600 : screenWidth * 0.9,
-              ),
-              padding: EdgeInsets.all(isTablet ? 28 : 20),
+              padding: context.responsiveCardPadding,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(isTablet ? 20 : 16),
+                borderRadius:
+                    BorderRadius.circular(context.responsiveSpacing(16)),
                 border: Border.all(
                   color: Colors.white.withOpacity(0.2),
                   width: 1,
                 ),
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildFeatureItem(
+                    context,
                     Icons.inventory_2_outlined,
                     'Organize Your Closet',
                     'Keep track of all your clothes digitally',
                     isTablet,
+                    isIPhoneProMax,
                   ),
-                  SizedBox(height: isTablet ? 24 : 20),
+                  SizedBox(height: context.responsiveSpacing(12)),
                   _buildFeatureItem(
+                    context,
                     Icons.wb_sunny_outlined,
                     'Weather-Based Suggestions',
                     'Get outfit recommendations based on weather',
                     isTablet,
+                    isIPhoneProMax,
                   ),
-                  SizedBox(height: isTablet ? 24 : 20),
+                  SizedBox(height: context.responsiveSpacing(12)),
                   _buildFeatureItem(
+                    context,
                     Icons.auto_awesome_outlined,
                     'AI-Powered Styling',
                     'Smart recommendations for perfect outfits',
                     isTablet,
+                    isIPhoneProMax,
                   ),
                 ],
               ),
             ),
 
-            SizedBox(height: isTablet ? 60 : 50),
+            SizedBox(
+                height: context.responsiveSpacing(isIPhoneProMax ? 30 : 25)),
 
             // Buttons container
             Container(
               width: double.infinity,
-              constraints: BoxConstraints(
-                maxWidth: isTablet ? 600 : screenWidth * 0.9,
-              ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   // Get Started button
                   SizedBox(
                     width: double.infinity,
-                    height: isTablet ? 64 : 56,
+                    height: context.responsiveButtonHeight,
                     child: ElevatedButton(
                       onPressed: () {
                         moveTo(context, const SignUpPage());
@@ -376,26 +368,26 @@ class OnboardingPage extends StatelessWidget {
                         elevation: 8,
                         shadowColor: Colors.black26,
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(isTablet ? 20 : 16),
+                          borderRadius: BorderRadius.circular(
+                              context.responsiveSpacing(16)),
                         ),
                       ),
                       child: Text(
                         'Get Started',
-                        style: TextStyle(
-                          fontSize: isTablet ? 20 : 18,
+                        style: context.responsiveTextStyle(
+                          fontSize: isIPhoneProMax ? 20 : (isTablet ? 20 : 18),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                   ),
 
-                  SizedBox(height: isTablet ? 20 : 16),
+                  SizedBox(height: context.responsiveSpacing(16)),
 
                   // Secondary button
                   SizedBox(
                     width: double.infinity,
-                    height: isTablet ? 64 : 56,
+                    height: context.responsiveButtonHeight,
                     child: OutlinedButton(
                       onPressed: () {
                         moveTo(context, const LoginPage());
@@ -404,14 +396,14 @@ class OnboardingPage extends StatelessWidget {
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white, width: 2),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(isTablet ? 20 : 16),
+                          borderRadius: BorderRadius.circular(
+                              context.responsiveSpacing(16)),
                         ),
                       ),
                       child: Text(
                         'Sign In',
-                        style: TextStyle(
-                          fontSize: isTablet ? 20 : 18,
+                        style: context.responsiveTextStyle(
+                          fontSize: isIPhoneProMax ? 20 : (isTablet ? 20 : 18),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -421,49 +413,55 @@ class OnboardingPage extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: isTablet ? 40 : 30),
+            SizedBox(height: context.responsiveSpacing(20)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFeatureItem(
-      IconData icon, String title, String description, bool isTablet) {
+  Widget _buildFeatureItem(BuildContext context, IconData icon, String title,
+      String description, bool isTablet, bool isIPhoneProMax) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: isTablet ? 56 : 48,
-          height: isTablet ? 56 : 48,
+          width: context
+              .responsiveIconSize(isIPhoneProMax ? 50 : (isTablet ? 48 : 44)),
+          height: context
+              .responsiveIconSize(isIPhoneProMax ? 50 : (isTablet ? 48 : 44)),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(isTablet ? 16 : 12),
+            borderRadius: BorderRadius.circular(context.responsiveSpacing(12)),
           ),
           child: Icon(
             icon,
             color: Colors.white,
-            size: isTablet ? 28 : 24,
+            size: context
+                .responsiveIconSize(isIPhoneProMax ? 26 : (isTablet ? 24 : 22)),
           ),
         ),
-        SizedBox(width: isTablet ? 20 : 16),
+        SizedBox(width: context.responsiveSpacing(12)),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: isTablet ? 18 : 16,
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 18 : (isTablet ? 17 : 16),
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: isTablet ? 6 : 4),
+              SizedBox(height: context.responsiveSpacing(2)),
               Text(
                 description,
-                style: TextStyle(
-                  fontSize: isTablet ? 16 : 14,
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 15 : (isTablet ? 14 : 13),
                   color: Colors.white70,
+                  height: 1.3,
                 ),
               ),
             ],
@@ -517,10 +515,4 @@ class OnboardingPage extends StatelessWidget {
       ],
     );
   }
-}
-
-enum ScreenType {
-  mobile,
-  tablet,
-  desktop,
 }

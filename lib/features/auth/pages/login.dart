@@ -2,6 +2,7 @@ import 'package:closet_craft_project/features/auth/pages/signup.dart';
 import 'package:closet_craft_project/features/auth/provider/auth_provider.dart';
 import 'package:closet_craft_project/features/bottom_navigation/bottom_navigation.dart';
 import 'package:closet_craft_project/utils/utils.dart';
+import 'package:closet_craft_project/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,27 +24,33 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isIPhoneProMax = context.isIPhoneProMax;
+    final isTabletOrLarger = context.isTabletOrLarger;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: context.responsivePadding,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Welcome Back!',
-                style: TextStyle(
-                  fontSize: 32,
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 36 : (isTabletOrLarger ? 34 : 32),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: context.responsiveSpacing(8)),
+              Text(
                 'Login to your account',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 18 : (isTabletOrLarger ? 17 : 16),
+                  color: Colors.grey,
+                ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: context.responsiveSpacing(40)),
 
               // Email
               TextField(
@@ -52,14 +59,28 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: 'Email',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  prefixIcon: const Icon(Icons.email_outlined),
+                  prefixIcon: Icon(
+                    Icons.email_outlined,
+                    size: context.responsiveIconSize(20),
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                        BorderRadius.circular(context.responsiveSpacing(12)),
                     borderSide: BorderSide.none,
                   ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: context.responsiveSpacing(16),
+                    vertical: context.responsiveSpacing(16),
+                  ),
+                  hintStyle: context.responsiveTextStyle(
+                    fontSize: isIPhoneProMax ? 16 : 14,
+                  ),
+                ),
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 16 : 14,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Password
               TextField(
@@ -69,42 +90,64 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: 'Password',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  prefixIcon: const Icon(Icons.lock_outline),
+                  prefixIcon: Icon(
+                    Icons.lock_outline,
+                    size: context.responsiveIconSize(20),
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                        BorderRadius.circular(context.responsiveSpacing(12)),
                     borderSide: BorderSide.none,
                   ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: context.responsiveSpacing(16),
+                    vertical: context.responsiveSpacing(16),
+                  ),
+                  hintStyle: context.responsiveTextStyle(
+                    fontSize: isIPhoneProMax ? 16 : 14,
+                  ),
+                ),
+                style: context.responsiveTextStyle(
+                  fontSize: isIPhoneProMax ? 16 : 14,
                 ),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: context.responsiveSpacing(10)),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {},
-                  child: const Text('Forgot Password?'),
+                  child: Text(
+                    'Forgot Password?',
+                    style: context.responsiveTextStyle(
+                      fontSize: isIPhoneProMax ? 16 : 14,
+                    ),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.responsiveSpacing(20)),
 
               // Login button
               Consumer<AuthenProvider>(
                 builder: (context, provider, _) {
                   if (provider.loading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
                     );
                   }
                   return SizedBox(
                     width: double.infinity,
+                    height: context.responsiveButtonHeight,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Colors.deepPurple,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(
+                              context.responsiveSpacing(12)),
                         ),
                       ),
                       onPressed: () async {
@@ -120,25 +163,39 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         }
                       },
-                      child: const Text(
+                      child: Text(
                         'Login',
-                        style: TextStyle(fontSize: 16),
+                        style: context.responsiveTextStyle(
+                          fontSize: isIPhoneProMax ? 18 : 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   );
                 },
               ),
 
-              const SizedBox(height: 30),
+              SizedBox(height: context.responsiveSpacing(30)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?"),
+                  Text(
+                    "Don't have an account?",
+                    style: context.responsiveTextStyle(
+                      fontSize: isIPhoneProMax ? 16 : 14,
+                    ),
+                  ),
                   TextButton(
                     onPressed: () {
                       moveTo(context, SignUpPage());
                     },
-                    child: const Text('Sign Up'),
+                    child: Text(
+                      'Sign Up',
+                      style: context.responsiveTextStyle(
+                        fontSize: isIPhoneProMax ? 16 : 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ],
               )

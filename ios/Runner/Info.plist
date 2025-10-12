@@ -32,15 +32,15 @@
 	<string>To pick a photo from the library to upload the images to the cloud</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location to show local weather data.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs access to your location in order to provide accurate local weather updates.</string>
+	<!-- <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to your location in order to provide accurate local weather updates.</string> -->
 
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>UIBackgroundModes</key>
+	<!-- <key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
-	</array>
+	</array> -->
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
